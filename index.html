@@ -1,12 +1,397 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
     <title>Nova Tab</title>
+    <script>
+      (function () {
+        const storageKey = "nova-tab-dashboard";
+        const paletteKey = "backgroundPalette";
+        const themeKey = "theme";
+        const paletteMap = {
+          default: {
+            bgStart: "#203244",
+            bgEnd: "#0b1620",
+            heroGlow: "rgba(244, 247, 251, 0.22)",
+            orbOne: "#f4f7fb",
+            orbTwo: "#c8d8e8"
+          },
+          mint: {
+            bgStart: "#12332f",
+            bgEnd: "#071816",
+            heroGlow: "rgba(127, 234, 203, 0.32)",
+            orbOne: "#7feacb",
+            orbTwo: "#bff6e6"
+          },
+          ocean: {
+            bgStart: "#102d4a",
+            bgEnd: "#071827",
+            heroGlow: "rgba(104, 182, 255, 0.3)",
+            orbOne: "#68b6ff",
+            orbTwo: "#b7ddff"
+          },
+          sunset: {
+            bgStart: "#3a2418",
+            bgEnd: "#170d08",
+            heroGlow: "rgba(240, 168, 108, 0.3)",
+            orbOne: "#f0a86c",
+            orbTwo: "#ffd1ad"
+          },
+          rose: {
+            bgStart: "#381726",
+            bgEnd: "#160811",
+            heroGlow: "rgba(255, 143, 171, 0.3)",
+            orbOne: "#ff8fab",
+            orbTwo: "#ffc2d1"
+          },
+          pink: {
+            bgStart: "#3a1230",
+            bgEnd: "#170713",
+            heroGlow: "rgba(255, 95, 200, 0.32)",
+            orbOne: "#ff5fc8",
+            orbTwo: "#ffb0ea"
+          },
+          wine: {
+            bgStart: "#2a0914",
+            bgEnd: "#120308",
+            heroGlow: "rgba(122, 22, 52, 0.34)",
+            orbOne: "#7a1634",
+            orbTwo: "#b23a5a"
+          },
+          violet: {
+            bgStart: "#241b46",
+            bgEnd: "#0b0916",
+            heroGlow: "rgba(167, 139, 250, 0.3)",
+            orbOne: "#a78bfa",
+            orbTwo: "#d4c2ff"
+          },
+          black: {
+            bgStart: "#0a0a0d",
+            bgEnd: "#000000",
+            heroGlow: "rgba(255, 255, 255, 0.05)",
+            orbOne: "#1a1a22",
+            orbTwo: "#101014"
+          }
+        };
+        const themeMap = {
+          aurora: {
+            panel: "rgba(6, 17, 28, 0.72)",
+            panelBorder: "rgba(255, 255, 255, 0.12)",
+            textMain: "#f4f7fb",
+            textMuted: "rgba(244, 247, 251, 0.72)",
+            shadowColor: "rgba(0, 0, 0, 0.18)"
+          },
+          paper: {
+            panel: "rgba(255, 249, 238, 0.78)",
+            panelBorder: "rgba(99, 72, 44, 0.18)",
+            textMain: "#2f2418",
+            textMuted: "rgba(47, 36, 24, 0.68)",
+            shadowColor: "rgba(103, 78, 51, 0.14)"
+          },
+          midnight: {
+            panel: "rgba(12, 10, 24, 0.8)",
+            panelBorder: "rgba(142, 129, 255, 0.22)",
+            textMain: "#f6f1ff",
+            textMuted: "rgba(246, 241, 255, 0.72)",
+            shadowColor: "rgba(0, 0, 0, 0.32)"
+          },
+          ember: {
+            panel: "rgba(33, 14, 11, 0.8)",
+            panelBorder: "rgba(255, 133, 88, 0.24)",
+            textMain: "#fff2eb",
+            textMuted: "rgba(255, 233, 223, 0.72)",
+            shadowColor: "rgba(0, 0, 0, 0.3)"
+          },
+          fjord: {
+            panel: "rgba(7, 23, 33, 0.78)",
+            panelBorder: "rgba(110, 190, 214, 0.22)",
+            textMain: "#edf9ff",
+            textMuted: "rgba(221, 244, 255, 0.72)",
+            shadowColor: "rgba(0, 0, 0, 0.26)"
+          }
+        };
+        const toneMap = {
+          default: {
+            surface: "rgba(255, 255, 255, 0.03)",
+            border: "rgba(255, 255, 255, 0.12)",
+            glow: "rgba(255, 255, 255, 0.06)"
+          },
+          mint: {
+            surface: "rgba(127, 234, 203, 0.12)",
+            border: "rgba(127, 234, 203, 0.34)",
+            glow: "rgba(127, 234, 203, 0.22)"
+          },
+          ocean: {
+            surface: "rgba(104, 182, 255, 0.12)",
+            border: "rgba(104, 182, 255, 0.34)",
+            glow: "rgba(104, 182, 255, 0.22)"
+          },
+          sunset: {
+            surface: "rgba(240, 168, 108, 0.12)",
+            border: "rgba(240, 168, 108, 0.34)",
+            glow: "rgba(240, 168, 108, 0.22)"
+          },
+          rose: {
+            surface: "rgba(255, 143, 171, 0.12)",
+            border: "rgba(255, 143, 171, 0.34)",
+            glow: "rgba(255, 143, 171, 0.22)"
+          },
+          pink: {
+            surface: "rgba(255, 95, 200, 0.14)",
+            border: "rgba(255, 95, 200, 0.36)",
+            glow: "rgba(255, 95, 200, 0.24)"
+          },
+          wine: {
+            surface: "rgba(122, 22, 52, 0.2)",
+            border: "rgba(160, 44, 79, 0.4)",
+            glow: "rgba(122, 22, 52, 0.24)"
+          },
+          violet: {
+            surface: "rgba(167, 139, 250, 0.12)",
+            border: "rgba(167, 139, 250, 0.34)",
+            glow: "rgba(167, 139, 250, 0.22)"
+          },
+          black: {
+            surface: "rgba(10, 10, 13, 0.48)",
+            border: "rgba(255, 255, 255, 0.16)",
+            glow: "rgba(255, 255, 255, 0.04)"
+          }
+        };
+        const sizeMap = {
+          S: { width: 2, height: 2 },
+          M: { width: 3, height: 3 },
+          L: { width: 4, height: 4 }
+        };
+
+        try {
+          const raw = localStorage.getItem(storageKey);
+          const parsed = raw ? JSON.parse(raw) : null;
+          const paletteName = parsed && parsed[paletteKey] ? parsed[paletteKey] : "default";
+          const themeName = parsed && parsed[themeKey] ? parsed[themeKey] : "aurora";
+          const palette = paletteMap[paletteName] || paletteMap.default;
+          const theme = themeMap[themeName] || themeMap.aurora;
+
+          window.__NOVA_BOOT_STATE__ = parsed;
+          document.documentElement.style.setProperty("--boot-bg-start", palette.bgStart);
+          document.documentElement.style.setProperty("--boot-bg-end", palette.bgEnd);
+          document.documentElement.style.setProperty("--boot-hero-glow", palette.heroGlow);
+          document.documentElement.style.setProperty("--boot-orb-one", palette.orbOne);
+          document.documentElement.style.setProperty("--boot-orb-two", palette.orbTwo);
+          document.documentElement.style.setProperty("--boot-panel", theme.panel);
+          document.documentElement.style.setProperty("--boot-panel-border", theme.panelBorder);
+          document.documentElement.style.setProperty("--boot-text-main", theme.textMain);
+          document.documentElement.style.setProperty("--boot-text-muted", theme.textMuted);
+          document.documentElement.style.setProperty("--boot-shadow-color", theme.shadowColor);
+
+          window.__NOVA_BOOT_HELPERS__ = { toneMap: toneMap, sizeMap: sizeMap };
+        } catch {
+          window.__NOVA_BOOT_STATE__ = null;
+          document.documentElement.style.setProperty("--boot-bg-start", "#203244");
+          document.documentElement.style.setProperty("--boot-bg-end", "#0b1620");
+          document.documentElement.style.setProperty("--boot-hero-glow", "rgba(244, 247, 251, 0.22)");
+          document.documentElement.style.setProperty("--boot-orb-one", "#f4f7fb");
+          document.documentElement.style.setProperty("--boot-orb-two", "#c8d8e8");
+          document.documentElement.style.setProperty("--boot-panel", "rgba(6, 17, 28, 0.72)");
+          document.documentElement.style.setProperty("--boot-panel-border", "rgba(255, 255, 255, 0.12)");
+          document.documentElement.style.setProperty("--boot-text-main", "#f4f7fb");
+          document.documentElement.style.setProperty("--boot-text-muted", "rgba(244, 247, 251, 0.72)");
+          document.documentElement.style.setProperty("--boot-shadow-color", "rgba(0, 0, 0, 0.18)");
+        }
+      })();
+    </script>
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100vh;
+        width: 100%;
+        background:
+          radial-gradient(circle at top left, var(--boot-hero-glow, rgba(244, 247, 251, 0.22)), transparent 26%),
+          linear-gradient(145deg, var(--boot-bg-start, #203244), var(--boot-bg-end, #0b1620));
+        color: #f4f7fb;
+      }
+
+      .boot-shell {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        min-height: 100vh;
+        overflow: hidden;
+        color: var(--boot-text-main, #f4f7fb);
+        background:
+          radial-gradient(circle at top left, var(--boot-hero-glow, rgba(244, 247, 251, 0.22)), transparent 26%),
+          linear-gradient(145deg, var(--boot-bg-start, #203244), var(--boot-bg-end, #0b1620));
+        transition: opacity 120ms linear;
+      }
+
+      body[data-app-ready="true"] .boot-shell {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .boot-orb {
+        position: absolute;
+        border-radius: 999px;
+        pointer-events: none;
+        opacity: 0.45;
+        filter: blur(30px);
+        will-change: opacity;
+      }
+
+      .boot-orb--one {
+        width: 320px;
+        height: 320px;
+        top: -60px;
+        right: 15%;
+        background: var(--boot-orb-one, #f4f7fb);
+      }
+
+      .boot-orb--two {
+        width: 260px;
+        height: 260px;
+        right: -80px;
+        bottom: 5%;
+        background: var(--boot-orb-two, #c8d8e8);
+      }
+
+      .boot-settings-trigger {
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        z-index: 2;
+        width: 60px;
+        height: 60px;
+        display: grid;
+        place-items: center;
+        border-radius: 20px;
+        border: 1px solid var(--boot-panel-border, rgba(255, 255, 255, 0.12));
+        background: var(--boot-panel, rgba(6, 17, 28, 0.72));
+        box-shadow: 0 16px 60px var(--boot-shadow-color, rgba(0, 0, 0, 0.18));
+        backdrop-filter: blur(22px);
+        color: var(--boot-text-main, #f4f7fb);
+        font: 600 24px/1 "Segoe UI", sans-serif;
+      }
+
+      .boot-grid {
+        position: absolute;
+        inset: 24px;
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        grid-template-rows: repeat(10, minmax(0, 1fr));
+        gap: 12px;
+        z-index: 1;
+      }
+
+      .boot-card {
+        min-width: 0;
+        min-height: 0;
+        padding: 18px;
+        border-radius: 24px;
+        border: 1px solid var(--boot-widget-border, var(--boot-panel-border, rgba(255, 255, 255, 0.12)));
+        background:
+          linear-gradient(180deg, var(--boot-widget-surface, rgba(255, 255, 255, 0.03)), transparent 70%),
+          var(--boot-panel, rgba(6, 17, 28, 0.72));
+        box-shadow:
+          0 16px 60px var(--boot-shadow-color, rgba(0, 0, 0, 0.18)),
+          inset 0 1px 0 var(--boot-widget-glow, rgba(255, 255, 255, 0.06));
+        backdrop-filter: blur(22px);
+      }
+
+      .boot-card__title {
+        font: 500 0.9rem/1.2 "Segoe UI", sans-serif;
+        color: var(--boot-text-muted, rgba(244, 247, 251, 0.72));
+        margin-bottom: 18px;
+      }
+
+      .boot-card__body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .boot-line {
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .boot-line--strong {
+        height: 18px;
+        width: 62%;
+      }
+
+      .boot-line--medium {
+        width: 46%;
+      }
+
+      .boot-line--short {
+        width: 30%;
+      }
+    </style>
   </head>
   <body>
+    <main class="boot-shell" aria-hidden="true">
+      <div class="boot-orb boot-orb--one"></div>
+      <div class="boot-orb boot-orb--two"></div>
+      <div class="boot-settings-trigger">⚙</div>
+      <section class="boot-grid" id="boot-grid"></section>
+    </main>
     <div id="root"></div>
+    <script>
+      (function () {
+        const bootGrid = document.getElementById("boot-grid");
+        const state = window.__NOVA_BOOT_STATE__;
+        const helpers = window.__NOVA_BOOT_HELPERS__;
+
+        if (!bootGrid || !state || !Array.isArray(state.widgets) || !helpers) {
+          return;
+        }
+
+        const visibleWidgets = state.widgets.filter(function (widget) {
+          return widget && widget.enabled !== false;
+        });
+
+        visibleWidgets.forEach(function (widget) {
+          const span = helpers.sizeMap[widget.size] || helpers.sizeMap.M;
+          const tone = helpers.toneMap[widget.tone] || helpers.toneMap.default;
+          const card = document.createElement("article");
+          card.className = "boot-card";
+          card.style.gridColumn = widget.x + " / span " + span.width;
+          card.style.gridRow = widget.y + " / span " + span.height;
+          card.style.setProperty("--boot-widget-surface", tone.surface);
+          card.style.setProperty("--boot-widget-border", tone.border);
+          card.style.setProperty("--boot-widget-glow", tone.glow);
+
+          const title = document.createElement("div");
+          title.className = "boot-card__title";
+          title.textContent = widget.title || "Widget";
+
+          const body = document.createElement("div");
+          body.className = "boot-card__body";
+
+          const strongLine = document.createElement("div");
+          strongLine.className = "boot-line boot-line--strong";
+          const mediumLine = document.createElement("div");
+          mediumLine.className = "boot-line boot-line--medium";
+          const shortLine = document.createElement("div");
+          shortLine.className = "boot-line boot-line--short";
+
+          body.appendChild(strongLine);
+          body.appendChild(mediumLine);
+          if (widget.size !== "S") {
+            body.appendChild(shortLine);
+          }
+
+          card.appendChild(title);
+          card.appendChild(body);
+          bootGrid.appendChild(card);
+        });
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
   </html>

@@ -20,7 +20,9 @@ interface SettingsPanelProps {
 const themes: Array<{ value: ThemeMode; label: string }> = [
   { value: "aurora", label: "Aurora" },
   { value: "paper", label: "Paper" },
-  { value: "midnight", label: "Midnight" }
+  { value: "midnight", label: "Midnight" },
+  { value: "ember", label: "Ember" },
+  { value: "fjord", label: "Fjord" }
 ];
 
 export function SettingsPanel({

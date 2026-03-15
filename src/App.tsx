@@ -1,5 +1,5 @@
 import type { CSSProperties, DragEvent } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { SettingsPanel } from "./features/settings/SettingsPanel";
 import { getBackgroundPalette } from "./features/widget-board/backgroundPalettes";
 import {
@@ -10,21 +10,32 @@ import {
   getAnchoredDropPosition,
   hasCollision
 } from "./features/widget-board/board";
-import { loadDashboardState, saveDashboardState } from "./lib/storage";
+import { getInitialDashboardState, hasCachedDashboardState, loadDashboardState, saveDashboardState } from "./lib/storage";
 import { renderWidget } from "./features/widgets/registry";
 import { getWidgetSpan } from "./features/widget-board/sizes";
 import type { DashboardState, ThemeMode, WidgetSize, WidgetTone } from "./types/widgets";
 
 function App() {
-  const [state, setState] = useState<DashboardState | null>(null);
+  const [state, setState] = useState<DashboardState>(() => getInitialDashboardState());
+  const [hasCachedState] = useState(() => hasCachedDashboardState());
   const [editMode, setEditMode] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
   const [dropTargetPosition, setDropTargetPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
-    loadDashboardState().then(setState);
-  }, []);
+    if (hasCachedState) {
+      return;
+    }
+
+    void loadDashboardState().then((loadedState) => {
+      setState((currentState) => {
+        const currentSerialized = JSON.stringify(currentState);
+        const loadedSerialized = JSON.stringify(loadedState);
+        return currentSerialized === loadedSerialized ? currentState : loadedState;
+      });
+    });
+  }, [hasCachedState]);
 
   useEffect(() => {
     if (!state) {
@@ -34,20 +45,20 @@ function App() {
     void saveDashboardState(state);
   }, [state]);
 
-  if (!state) {
-    return <main className="app-shell loading">Loading Nova Tab...</main>;
-  }
+  useLayoutEffect(() => {
+    document.body.setAttribute("data-app-ready", "true");
+
+    return () => {
+      document.body.removeAttribute("data-app-ready");
+    };
+  }, []);
 
   const updateState = (partial: Partial<DashboardState>) => {
-    setState((current) => (current ? { ...current, ...partial } : current));
+    setState((current) => ({ ...current, ...partial }));
   };
 
   const setWidgetEnabled = (widgetId: string, enabled: boolean) => {
     setState((current) => {
-      if (!current) {
-        return current;
-      }
-
       const nextWidgets = current.widgets.map((widget) => {
         if (widget.id !== widgetId) {
           return widget;
@@ -70,10 +81,6 @@ function App() {
 
   const setWidgetTone = (widgetId: string, tone: WidgetTone) => {
     setState((current) => {
-      if (!current) {
-        return current;
-      }
-
       return {
         ...current,
         widgets: current.widgets.map((widget) => (widget.id === widgetId ? { ...widget, tone } : widget))
@@ -83,10 +90,6 @@ function App() {
 
   const setWidgetSize = (widgetId: string, size: WidgetSize) => {
     setState((current) => {
-      if (!current) {
-        return current;
-      }
-
       const nextWidgets = current.widgets.map((widget) => {
         if (widget.id !== widgetId) {
           return widget;
@@ -112,10 +115,6 @@ function App() {
 
   const setWidgetTitle = (widgetId: string, title: string) => {
     setState((current) => {
-      if (!current) {
-        return current;
-      }
-
       return {
         ...current,
         widgets: current.widgets.map((widget) => (widget.id === widgetId ? { ...widget, title } : widget))
@@ -125,10 +124,6 @@ function App() {
 
   const setWidgetContent = (widgetId: string, content: string) => {
     setState((current) => {
-      if (!current) {
-        return current;
-      }
-
       return {
         ...current,
         widgets: current.widgets.map((widget) => (widget.id === widgetId ? { ...widget, content } : widget))
@@ -138,10 +133,6 @@ function App() {
 
   const moveWidgetToCell = (widgetId: string, x: number, y: number) => {
     setState((current) => {
-      if (!current) {
-        return current;
-      }
-
       const targetWidget = current.widgets.find((widget) => widget.id === widgetId);
       if (!targetWidget) {
         return current;
@@ -186,6 +177,14 @@ function App() {
   const draggedWidget = draggedWidgetId ? state.widgets.find((widget) => widget.id === draggedWidgetId) ?? null : null;
   const draggedWidgetSpan = draggedWidget ? getWidgetSpan(draggedWidget.size) : null;
   const backgroundPalette = getBackgroundPalette(state.backgroundPalette);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--boot-bg-start", backgroundPalette.bgStart);
+    root.style.setProperty("--boot-bg-end", backgroundPalette.bgEnd);
+    root.style.setProperty("--boot-hero-glow", backgroundPalette.heroGlow);
+  }, [backgroundPalette.bgEnd, backgroundPalette.bgStart, backgroundPalette.heroGlow]);
+
   const boardStyle = {
     "--dashboard-columns": DASHBOARD_COLUMNS,
     "--dashboard-rows": DASHBOARD_ROWS,

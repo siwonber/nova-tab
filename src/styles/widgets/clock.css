@@ -1,84 +1,242 @@
 .clock-widget {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   height: 100%;
+  overflow: hidden;
 }
 
-.clock-widget__time-block {
+.clock-widget__backdrop {
+  position: absolute;
+  right: -0.04em;
+  bottom: -0.12em;
+  pointer-events: none;
+  user-select: none;
+  color: rgba(255, 255, 255, 0.04);
+  font-weight: 700;
+  line-height: 0.76;
+  letter-spacing: -0.09em;
+}
+
+.clock-widget__backdrop span {
+  display: block;
+}
+
+.clock-widget__hero {
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.clock-widget strong {
-  font-size: 2.6rem;
-  line-height: 0.92;
+.clock-widget__time-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.clock-widget__time {
+  font-size: 3rem;
+  line-height: 0.86;
   letter-spacing: -0.04em;
+  font-weight: 700;
 }
 
-.clock-widget__day-pill {
+.clock-widget__period {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 52px;
-  padding: 8px 12px;
+  min-height: 34px;
+  padding: 0 12px;
   border-radius: 999px;
-  font-size: 0.78rem;
-  color: var(--text-muted);
   border: 1px solid var(--panel-border);
   background: var(--chip-bg);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.clock-widget__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.clock-widget__weekday {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 .clock-widget__date {
   color: var(--text-muted);
-  font-size: 0.98rem;
+  font-size: 0.92rem;
+}
+
+.clock-widget__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.clock-widget__caption {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.clock-widget__caption--secondary {
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .clock-widget--s {
   justify-content: center;
-  gap: 8px;
-}
-
-.clock-widget--s .clock-widget__time-block {
-  flex-direction: column;
-  align-items: flex-start;
   gap: 10px;
 }
 
-.clock-widget--s strong {
-  font-size: 1.65rem;
+.clock-widget--s .clock-widget__backdrop {
+  display: none;
 }
 
-.clock-widget--s .clock-widget__day-pill {
-  min-width: 0;
-  padding: 6px 10px;
-  font-size: 0.72rem;
+.clock-widget--s .clock-widget__hero {
+  gap: 10px;
+}
+
+.clock-widget--s .clock-widget__time-line {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.clock-widget--s .clock-widget__time {
+  font-size: clamp(1.9rem, 3.6vw, 2.3rem);
+  line-height: 0.9;
+}
+
+.clock-widget--s .clock-widget__period {
+  min-height: 28px;
+  padding: 0 10px;
+  font-size: 0.66rem;
+}
+
+.clock-widget--s .clock-widget__weekday {
+  font-size: 0.88rem;
 }
 
 .clock-widget--s .clock-widget__date {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
-.clock-widget--m strong {
-  font-size: 2.55rem;
+.clock-widget--s .clock-widget__caption {
+  font-size: 0.68rem;
 }
 
-.clock-widget--l {
+.clock-widget--s .clock-widget__caption--secondary {
+  display: none;
+}
+
+.clock-widget--m {
+  justify-content: space-between;
+}
+
+.clock-widget--m .clock-widget__backdrop {
+  font-size: clamp(7rem, 10vw, 10rem);
+}
+
+.clock-widget--m .clock-widget__hero {
+  flex: 1;
+  justify-content: center;
   gap: 18px;
 }
 
-.clock-widget--l strong {
-  font-size: 3.5rem;
+.clock-widget--m .clock-widget__time-line {
+  align-items: center;
 }
 
-.clock-widget--l .clock-widget__day-pill {
-  padding: 10px 14px;
-  font-size: 0.84rem;
+.clock-widget--m .clock-widget__time {
+  font-size: clamp(2.7rem, 4vw, 3.3rem);
+}
+
+.clock-widget--m .clock-widget__period {
+  min-height: 32px;
+}
+
+.clock-widget--m .clock-widget__weekday {
+  font-size: 1.02rem;
+}
+
+.clock-widget--m .clock-widget__meta {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.clock-widget--l {
+  gap: 20px;
+}
+
+.clock-widget--l .clock-widget__backdrop {
+  font-size: clamp(10rem, 20vw, 16rem);
+}
+
+.clock-widget--l .clock-widget__hero {
+  height: 100%;
+  flex: 1;
+  justify-content: center;
+  gap: 28px;
+}
+
+.clock-widget--l .clock-widget__time-line {
+  align-items: center;
+  gap: 18px;
+}
+
+.clock-widget--l .clock-widget__time {
+  font-size: clamp(4rem, 6vw, 5.4rem);
+  line-height: 0.82;
+}
+
+.clock-widget--l .clock-widget__period {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.8rem;
+}
+
+.clock-widget--l .clock-widget__meta {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.clock-widget--l .clock-widget__weekday {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
 }
 
 .clock-widget--l .clock-widget__date {
   font-size: 1.08rem;
+  margin-left: auto;
+}
+
+.clock-widget--l .clock-widget__caption {
+  font-size: 0.72rem;
+  opacity: 0.9;
+}
+
+.clock-widget--l .clock-widget__footer {
+  margin-top: auto;
 }

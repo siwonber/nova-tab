@@ -45,10 +45,17 @@ function hasExtensionStorage() {
   return typeof window !== "undefined" && Boolean(window.browser?.storage?.local);
 }
 
-export async function loadDashboardState(): Promise<DashboardState> {
-  if (hasExtensionStorage()) {
-    const result = await window.browser!.storage!.local!.get(STORAGE_KEY);
-    return normalizeDashboardState(result[STORAGE_KEY] as Partial<DashboardState> | undefined);
+export function hasCachedDashboardState() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return window.localStorage.getItem(STORAGE_KEY) !== null;
+}
+
+export function getInitialDashboardState(): DashboardState {
+  if (typeof window === "undefined") {
+    return defaultState;
   }
 
   const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -63,6 +70,15 @@ export async function loadDashboardState(): Promise<DashboardState> {
   }
 }
 
+export async function loadDashboardState(): Promise<DashboardState> {
+  if (hasExtensionStorage()) {
+    const result = await window.browser!.storage!.local!.get(STORAGE_KEY);
+    return normalizeDashboardState(result[STORAGE_KEY] as Partial<DashboardState> | undefined);
+  }
+
+  return getInitialDashboardState();
+}
+
 export async function saveDashboardState(state: DashboardState) {
   const persistedState: DashboardState = {
     theme: state.theme,
@@ -71,12 +87,14 @@ export async function saveDashboardState(state: DashboardState) {
     quickLinks: state.quickLinks
   };
 
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(persistedState));
+  }
+
   if (hasExtensionStorage()) {
     await window.browser!.storage!.local!.set({ [STORAGE_KEY]: persistedState });
     return;
   }
-
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(persistedState));
 }
 
 function normalizeDashboardState(savedState?: Partial<DashboardState>): DashboardState {
@@ -145,12 +163,26 @@ function normalizeDashboardState(savedState?: Partial<DashboardState>): Dashboar
   const mergedState: DashboardState = {
     ...defaultState,
     ...savedState,
+    theme: normalizeTheme(savedState?.theme),
     backgroundPalette: savedState?.backgroundPalette ?? defaultState.backgroundPalette,
     widgets: mergedWidgets,
     quickLinks: savedState?.quickLinks ?? defaultState.quickLinks
   };
 
   return mergedState;
+}
+
+function normalizeTheme(theme: string | undefined): DashboardState["theme"] {
+  switch (theme) {
+    case "aurora":
+    case "paper":
+    case "midnight":
+    case "ember":
+    case "fjord":
+      return theme;
+    default:
+      return defaultState.theme;
+  }
 }
 
 function normalizeWidgetTitle(kind: string, title: string | undefined, fallbackTitle?: string) {

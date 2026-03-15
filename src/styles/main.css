@@ -1,6 +1,11 @@
+@import "./themes/aurora.css";
+@import "./themes/paper.css";
+@import "./themes/midnight.css";
+@import "./themes/ember.css";
+@import "./themes/fjord.css";
+
 :root {
-  color-scheme: light;
-  font-family: "Segoe UI", "Inter", sans-serif;
+  color-scheme: dark;
   line-height: 1.4;
   font-weight: 400;
 }
@@ -11,6 +16,15 @@
 
 body {
   margin: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, var(--boot-hero-glow, rgba(244, 247, 251, 0.22)), transparent 26%),
+    linear-gradient(145deg, var(--boot-bg-start, #203244), var(--boot-bg-end, #0b1620));
 }
 
 button,
@@ -25,6 +39,7 @@ button {
 }
 
 .app-shell {
+  --ui-font: "Segoe UI", "Inter", sans-serif;
   --bg-start: #112033;
   --bg-end: #051018;
   --panel: rgba(6, 17, 28, 0.72);
@@ -45,6 +60,17 @@ button {
   --search-button-bg-start: rgba(127, 234, 203, 0.28);
   --search-button-bg-end: rgba(240, 168, 108, 0.24);
   --search-button-soft-bg: rgba(255, 255, 255, 0.45);
+  --trigger-radius: 20px;
+  --panel-radius: 28px;
+  --card-radius: 24px;
+  --control-radius: 16px;
+  --cell-radius: 24px;
+  --item-radius: 18px;
+  --chip-radius: 999px;
+  --panel-blur: 22px;
+  --panel-shadow: 0 16px 60px var(--shadow-color);
+  --title-spacing: 0;
+  --caps-spacing: 0.12em;
   --dashboard-gap: 12px;
   min-height: 100vh;
   position: relative;
@@ -54,6 +80,24 @@ button {
     radial-gradient(circle at top left, var(--hero-glow), transparent 26%),
     linear-gradient(145deg, var(--bg-start), var(--bg-end));
   color: var(--text-main);
+  font-family: var(--ui-font);
+}
+
+.app-shell::before,
+.app-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-shell::before {
+  opacity: 0.55;
+}
+
+.app-shell::after {
+  opacity: 0.45;
 }
 
 .settings-shell {
@@ -69,12 +113,12 @@ button {
   height: 60px;
   display: grid;
   place-items: center;
-  border-radius: 20px;
+  border-radius: var(--trigger-radius);
   border: 1px solid var(--panel-border);
   background: var(--panel);
   color: inherit;
-  backdrop-filter: blur(22px);
-  box-shadow: 0 16px 60px var(--shadow-color);
+  backdrop-filter: blur(var(--panel-blur));
+  box-shadow: var(--panel-shadow);
   transition: transform 180ms ease, background 180ms ease;
 }
 
@@ -87,55 +131,9 @@ button {
   line-height: 1;
 }
 
-.theme-paper {
-  --bg-start: #f3efe5;
-  --bg-end: #ddd1bd;
-  --panel: rgba(255, 250, 242, 0.74);
-  --panel-border: rgba(83, 58, 35, 0.18);
-  --text-main: #2d2118;
-  --text-muted: rgba(45, 33, 24, 0.72);
-  --hero-glow: rgba(194, 144, 94, 0.18);
-  --shadow-color: rgba(83, 58, 35, 0.12);
-  --orb-one: #d2b18a;
-  --orb-two: #c77f52;
-  --control-bg: rgba(255, 255, 255, 0.45);
-  --control-accent: #b1784e;
-  --edit-outline: rgba(83, 58, 35, 0.22);
-  --chip-bg: rgba(255, 255, 255, 0.38);
-  --search-input-border: rgba(83, 58, 35, 0.16);
-  --search-input-bg: rgba(255, 255, 255, 0.45);
-  --search-button-border: rgba(177, 120, 78, 0.28);
-  --search-button-bg-start: rgba(210, 177, 138, 0.4);
-  --search-button-bg-end: rgba(199, 127, 82, 0.28);
-  --search-button-soft-bg: rgba(255, 255, 255, 0.45);
-}
-
-.theme-midnight {
-  --bg-start: #16122f;
-  --bg-end: #05050b;
-  --panel: rgba(14, 11, 29, 0.78);
-  --panel-border: rgba(151, 138, 255, 0.2);
-  --text-main: #f5f1ff;
-  --text-muted: rgba(245, 241, 255, 0.72);
-  --hero-glow: rgba(151, 138, 255, 0.22);
-  --shadow-color: rgba(0, 0, 0, 0.28);
-  --orb-one: #978aff;
-  --orb-two: #ff8f70;
-  --control-bg: rgba(255, 255, 255, 0.06);
-  --control-accent: #978aff;
-  --edit-outline: rgba(151, 138, 255, 0.3);
-  --chip-bg: rgba(255, 255, 255, 0.07);
-  --search-input-border: rgba(151, 138, 255, 0.24);
-  --search-input-bg: rgba(255, 255, 255, 0.08);
-  --search-button-border: rgba(151, 138, 255, 0.32);
-  --search-button-bg-start: rgba(151, 138, 255, 0.24);
-  --search-button-bg-end: rgba(255, 143, 112, 0.2);
-  --search-button-soft-bg: rgba(255, 255, 255, 0.08);
-}
-
 .background-orb {
   position: absolute;
-  border-radius: 999px;
+  border-radius: var(--chip-radius);
   filter: blur(30px);
   opacity: 0.45;
   pointer-events: none;
@@ -161,16 +159,16 @@ button {
 .widget-card {
   position: relative;
   z-index: 1;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  backdrop-filter: blur(22px);
-  box-shadow: 0 16px 60px var(--shadow-color);
+  backdrop-filter: blur(var(--panel-blur));
 }
 
 .settings-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--panel-shadow);
   width: min(320px, calc(100vw - 48px));
   max-height: calc(100vh - 48px);
-  border-radius: 28px;
+  border-radius: var(--panel-radius);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -227,7 +225,7 @@ button {
   border: 1px solid var(--panel-border);
   background: var(--control-bg);
   color: inherit;
-  border-radius: 16px;
+  border-radius: var(--control-radius);
   padding: 12px 14px;
 }
 
@@ -254,7 +252,7 @@ button {
 .widget-grid--edit .widget-slot {
   outline: 1px dashed var(--edit-outline);
   outline-offset: 8px;
-  border-radius: 28px;
+  border-radius: var(--panel-radius);
   cursor: grab;
   transition: transform 160ms ease, outline-color 160ms ease, opacity 160ms ease;
 }
@@ -270,14 +268,19 @@ button {
 }
 
 .widget-grid__cell {
-  border-radius: 24px;
+  border-radius: var(--cell-radius);
   border: 1px dashed rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.02);
 }
 
 .widget-grid__cell--active {
   border-color: var(--control-accent);
-  background: rgba(127, 234, 203, 0.08);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--control-accent) 24%, transparent), transparent),
+    color-mix(in srgb, var(--control-accent) 12%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--control-accent) 28%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--control-accent) 16%, transparent);
 }
 
 .widget-grid--edit .widget-slot:active {
@@ -323,7 +326,7 @@ button {
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  border-radius: 18px;
+  border-radius: var(--item-radius);
   border: 1px solid var(--panel-border);
   background: var(--control-bg);
 }
@@ -394,11 +397,6 @@ button {
   box-shadow: inset 0 0 0 1px var(--control-accent);
 }
 
-.theme-paper .widget-swatch,
-.theme-paper .widget-size-option {
-  background-clip: padding-box;
-}
-
 .widget-color-item__swatches {
   display: flex;
   flex-wrap: wrap;
@@ -411,7 +409,7 @@ button {
   flex-shrink: 0;
   width: 28px;
   height: 28px;
-  border-radius: 999px;
+  border-radius: var(--chip-radius);
   border: 2px solid transparent;
   padding: 0;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);

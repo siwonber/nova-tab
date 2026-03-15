@@ -2,25 +2,66 @@
   --widget-surface: rgba(255, 255, 255, 0.03);
   --widget-border-color: var(--panel-border);
   --widget-glow: rgba(255, 255, 255, 0.06);
-  border-radius: 24px;
+  --widget-accent: var(--text-main);
+  --widget-tint: color-mix(in srgb, var(--widget-accent) 16%, transparent);
+  --widget-edge: color-mix(in srgb, var(--widget-border-color) 72%, transparent);
+  --widget-bloom: color-mix(in srgb, var(--widget-accent) 18%, transparent);
+  border-radius: var(--card-radius);
   min-height: 100%;
   height: 100%;
   padding: 18px;
   background:
-    linear-gradient(180deg, var(--widget-surface), transparent 70%),
+    radial-gradient(circle at top right, var(--widget-glow), transparent 34%),
+    radial-gradient(circle at bottom left, var(--widget-bloom), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--widget-surface) 94%, var(--widget-accent) 6%), transparent 68%),
+    linear-gradient(135deg, var(--widget-tint), transparent 58%),
     var(--panel);
-  border-color: var(--widget-border-color);
+  border: 1px solid var(--widget-edge);
   box-shadow:
-    0 16px 60px var(--shadow-color),
-    inset 0 1px 0 var(--widget-glow);
+    var(--panel-shadow),
+    0 0 0 1px color-mix(in srgb, var(--widget-accent) 10%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--widget-glow) 82%, white 18%),
+    inset 0 0 0 1px color-mix(in srgb, var(--widget-border-color) 28%, transparent);
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    clip-path 180ms ease;
+  isolation: isolate;
 }
 
 .widget-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.9rem;
   color: var(--text-muted);
   margin-bottom: 18px;
+  letter-spacing: var(--title-spacing);
+}
+
+.widget-card__header::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: var(--chip-radius);
+  background: var(--widget-accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--widget-accent) 42%, transparent);
+  flex-shrink: 0;
 }
 
 .widget-card__content {
   height: calc(100% - 34px);
+  position: relative;
+  z-index: 1;
+}
+
+.widget-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
 }

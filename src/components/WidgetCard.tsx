@@ -13,7 +13,8 @@ export function WidgetCard({ title, tone, children }: WidgetCardProps) {
   const style = {
     "--widget-surface": toneOption.surface,
     "--widget-border-color": toneOption.border,
-    "--widget-glow": toneOption.glow
+    "--widget-glow": toneOption.glow,
+    "--widget-accent": toneOption.accent
   } as CSSProperties;
 
   return (

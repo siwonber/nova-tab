@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Nova Tab",
+  "version": "0.1.0",
+  "description": "A flexible Firefox new tab page with widgets, themes, and personalization.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "nova-tab@example.local",
+      "strict_min_version": "109.0"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": ["storage", "search"],
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  }
+}

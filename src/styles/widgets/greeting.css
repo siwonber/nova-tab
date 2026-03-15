@@ -1,0 +1,11 @@
+.greeting-widget {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.greeting-widget strong {
+  font-size: clamp(1.7rem, 3vw, 3rem);
+  line-height: 1.05;
+  max-width: 10ch;
+}

@@ -1,18 +1,38 @@
 import type { DashboardState } from "../types/widgets";
-import { findFirstFreePosition } from "../features/widget-board/board";
+import { clampWidgetPosition, findFirstFreePosition, hasCollision } from "../features/widget-board/board";
 import { normalizeWidgetSize } from "../features/widget-board/sizes";
 
 const STORAGE_KEY = "nova-tab-dashboard";
 
 const defaultState: DashboardState = {
   theme: "aurora",
-  greeting: "What matters today?",
-  focusText: "Build a clear start page with zero friction.",
+  backgroundPalette: "default",
   widgets: [
-    { id: "search-primary", kind: "search", title: "Search", tone: "mint", enabled: true, size: "M", x: 1, y: 1 },
-    { id: "clock-primary", kind: "clock", title: "Time", tone: "ocean", enabled: true, size: "M", x: 5, y: 1 },
-    { id: "focus-primary", kind: "focus", title: "Focus", tone: "violet", enabled: true, size: "M", x: 1, y: 5 },
-    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "M", x: 5, y: 5 }
+    {
+      id: "greeting-primary",
+      kind: "greeting",
+      title: "Greeting",
+      tone: "default",
+      enabled: true,
+      size: "M",
+      content: "What matters today?",
+      x: 1,
+      y: 1
+    },
+    { id: "search-primary", kind: "search", title: "Search", tone: "mint", enabled: true, size: "M", x: 4, y: 1 },
+    { id: "clock-primary", kind: "clock", title: "Time", tone: "ocean", enabled: true, size: "M", x: 7, y: 1 },
+    {
+      id: "focus-primary",
+      kind: "focus",
+      title: "Main Focus",
+      tone: "violet",
+      enabled: true,
+      size: "M",
+      content: "Build a clear start page with zero friction.",
+      x: 10,
+      y: 1
+    },
+    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "L", x: 1, y: 4 }
   ],
   quickLinks: [
     { id: "gh", label: "GitHub", url: "https://github.com" },
@@ -46,8 +66,7 @@ export async function loadDashboardState(): Promise<DashboardState> {
 export async function saveDashboardState(state: DashboardState) {
   const persistedState: DashboardState = {
     theme: state.theme,
-    greeting: state.greeting,
-    focusText: state.focusText,
+    backgroundPalette: state.backgroundPalette,
     widgets: state.widgets,
     quickLinks: state.quickLinks
   };
@@ -65,11 +84,20 @@ function normalizeDashboardState(savedState?: Partial<DashboardState>): Dashboar
     typeof (savedState as { searchEnabled?: unknown } | undefined)?.searchEnabled === "boolean"
       ? ((savedState as { searchEnabled?: boolean }).searchEnabled ?? true)
       : undefined;
+  const legacyGreeting =
+    typeof (savedState as { greeting?: unknown } | undefined)?.greeting === "string"
+      ? (savedState as { greeting?: string }).greeting
+      : undefined;
+  const legacyFocusText =
+    typeof (savedState as { focusText?: unknown } | undefined)?.focusText === "string"
+      ? (savedState as { focusText?: string }).focusText
+      : undefined;
 
   const savedWidgets = savedState?.widgets ?? [];
-  const mergedWidgets = defaultState.widgets.map((defaultWidget) => {
+  const mergedWidgets = defaultState.widgets.reduce<DashboardState["widgets"]>((accumulator, defaultWidget) => {
     const savedWidget = savedWidgets.find((widget) => widget.kind === defaultWidget.kind || widget.id === defaultWidget.id);
     const isLegacySearchDisabled = defaultWidget.kind === "search" && legacySearchEnabled === false;
+    const hasSavedPosition = typeof savedWidget?.x === "number" && typeof savedWidget?.y === "number";
     const mergedWidget = {
       ...defaultWidget,
       ...savedWidget,
@@ -77,39 +105,47 @@ function normalizeDashboardState(savedState?: Partial<DashboardState>): Dashboar
       tone: savedWidget?.tone ?? defaultWidget.tone,
       enabled: savedWidget?.enabled ?? (savedWidget ? true : !isLegacySearchDisabled),
       size: normalizeWidgetSize(savedWidget?.size, defaultWidget.size),
+      content: normalizeWidgetContent(defaultWidget.kind, savedWidget?.content, legacyGreeting, legacyFocusText, defaultWidget.content),
       x: typeof savedWidget?.x === "number" ? savedWidget.x : defaultWidget.x,
       y: typeof savedWidget?.y === "number" ? savedWidget.y : defaultWidget.y
     };
 
     if (!mergedWidget.enabled) {
-      return mergedWidget;
+      accumulator.push(mergedWidget);
+      return accumulator;
     }
 
-    const freePosition = findFirstFreePosition(
-      defaultState.widgets
-        .map((widget) =>
-          widget.id === mergedWidget.id
-            ? null
-            : savedWidgets.find((savedWidgetCandidate) => savedWidgetCandidate.id === widget.id || savedWidgetCandidate.kind === widget.kind)
-        )
-        .filter(Boolean)
-        .map((widget, index) => ({
-          ...defaultState.widgets[index],
-          ...widget,
-          enabled: (widget as { enabled?: boolean } | undefined)?.enabled ?? true
-        })),
-      mergedWidget
-    );
+    if (!hasSavedPosition) {
+      const freePosition = findFirstFreePosition(accumulator, mergedWidget);
+      accumulator.push({
+        ...mergedWidget,
+        ...freePosition
+      });
+      return accumulator;
+    }
 
-    return {
+    const clampedPosition = clampWidgetPosition(mergedWidget);
+    const positionedWidget = {
       ...mergedWidget,
-      ...freePosition
+      ...clampedPosition
     };
-  });
+
+    if (!hasCollision(accumulator, positionedWidget, positionedWidget.id)) {
+      accumulator.push(positionedWidget);
+      return accumulator;
+    }
+
+    accumulator.push({
+      ...positionedWidget,
+      ...findFirstFreePosition(accumulator, positionedWidget)
+    });
+    return accumulator;
+  }, []);
 
   const mergedState: DashboardState = {
     ...defaultState,
     ...savedState,
+    backgroundPalette: savedState?.backgroundPalette ?? defaultState.backgroundPalette,
     widgets: mergedWidgets,
     quickLinks: savedState?.quickLinks ?? defaultState.quickLinks
   };
@@ -125,6 +161,8 @@ function normalizeWidgetTitle(kind: string, title: string | undefined, fallbackT
   }
 
   switch (kind) {
+    case "greeting":
+      return title === "Begruessung" ? "Greeting" : title;
     case "search":
       return title === "Suche" ? "Search" : title;
     case "clock":
@@ -140,6 +178,8 @@ function normalizeWidgetTitle(kind: string, title: string | undefined, fallbackT
 
 function getDefaultWidgetTitle(kind: string) {
   switch (kind) {
+    case "greeting":
+      return "Greeting";
     case "search":
       return "Search";
     case "clock":
@@ -151,4 +191,26 @@ function getDefaultWidgetTitle(kind: string) {
     default:
       return "Widget";
   }
+}
+
+function normalizeWidgetContent(
+  kind: string,
+  content: string | undefined,
+  legacyGreeting: string | undefined,
+  legacyFocusText: string | undefined,
+  fallbackContent?: string
+) {
+  if (typeof content === "string") {
+    return content;
+  }
+
+  if (kind === "greeting" && legacyGreeting) {
+    return legacyGreeting;
+  }
+
+  if (kind === "focus" && legacyFocusText) {
+    return legacyFocusText;
+  }
+
+  return fallbackContent;
 }

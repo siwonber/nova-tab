@@ -1,4 +1,5 @@
 import type { DashboardState, ThemeMode, WidgetSize, WidgetTone } from "../../types/widgets";
+import { BackgroundSettingsSection } from "./BackgroundSettingsSection";
 import { WidgetSettingsSection } from "./WidgetSettingsSection";
 
 interface SettingsPanelProps {
@@ -7,11 +8,11 @@ interface SettingsPanelProps {
   editMode: boolean;
   onToggleOpen: () => void;
   onToggleEditMode: () => void;
-  onGreetingChange: (value: string) => void;
-  onFocusChange: (value: string) => void;
   onThemeChange: (value: ThemeMode) => void;
+  onBackgroundPaletteChange: (value: WidgetTone) => void;
   onWidgetEnabledChange: (widgetId: string, enabled: boolean) => void;
   onWidgetTitleChange: (widgetId: string, title: string) => void;
+  onWidgetContentChange: (widgetId: string, content: string) => void;
   onWidgetSizeChange: (widgetId: string, size: WidgetSize) => void;
   onWidgetToneChange: (widgetId: string, tone: WidgetTone) => void;
 }
@@ -28,11 +29,11 @@ export function SettingsPanel({
   editMode,
   onToggleOpen,
   onToggleEditMode,
-  onGreetingChange,
-  onFocusChange,
   onThemeChange,
+  onBackgroundPaletteChange,
   onWidgetEnabledChange,
   onWidgetTitleChange,
+  onWidgetContentChange,
   onWidgetSizeChange,
   onWidgetToneChange
 }: SettingsPanelProps) {
@@ -63,20 +64,6 @@ export function SettingsPanel({
         </div>
 
         <label>
-          <span>Greeting</span>
-          <input value={state.greeting} onChange={(event) => onGreetingChange(event.target.value)} />
-        </label>
-
-        <label>
-          <span>Main Focus</span>
-          <textarea
-            rows={3}
-            value={state.focusText}
-            onChange={(event) => onFocusChange(event.target.value)}
-          />
-        </label>
-
-        <label>
           <span>Theme</span>
           <select value={state.theme} onChange={(event) => onThemeChange(event.target.value as ThemeMode)}>
             {themes.map((theme) => (
@@ -87,10 +74,13 @@ export function SettingsPanel({
           </select>
         </label>
 
+        <BackgroundSettingsSection value={state.backgroundPalette} onChange={onBackgroundPaletteChange} />
+
         <WidgetSettingsSection
           widgets={state.widgets}
           onWidgetEnabledChange={onWidgetEnabledChange}
           onWidgetTitleChange={onWidgetTitleChange}
+          onWidgetContentChange={onWidgetContentChange}
           onWidgetSizeChange={onWidgetSizeChange}
           onWidgetToneChange={onWidgetToneChange}
         />

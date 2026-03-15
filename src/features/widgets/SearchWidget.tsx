@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { WidgetCard } from "../../components/WidgetCard";
 import type { WidgetConfig } from "../../types/widgets";
+import "../../styles/widgets/search.css";
 
 interface SearchWidgetProps {
   widget: WidgetConfig;

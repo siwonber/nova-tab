@@ -1,6 +1,7 @@
 import type { CSSProperties, DragEvent } from "react";
 import { useEffect, useState } from "react";
 import { SettingsPanel } from "./features/settings/SettingsPanel";
+import { getBackgroundPalette } from "./features/widget-board/backgroundPalettes";
 import {
   DASHBOARD_COLUMNS,
   DASHBOARD_ROWS,
@@ -122,6 +123,19 @@ function App() {
     });
   };
 
+  const setWidgetContent = (widgetId: string, content: string) => {
+    setState((current) => {
+      if (!current) {
+        return current;
+      }
+
+      return {
+        ...current,
+        widgets: current.widgets.map((widget) => (widget.id === widgetId ? { ...widget, content } : widget))
+      };
+    });
+  };
+
   const moveWidgetToCell = (widgetId: string, x: number, y: number) => {
     setState((current) => {
       if (!current) {
@@ -171,13 +185,19 @@ function App() {
   const enabledWidgets = state.widgets.filter((widget) => widget.enabled);
   const draggedWidget = draggedWidgetId ? state.widgets.find((widget) => widget.id === draggedWidgetId) ?? null : null;
   const draggedWidgetSpan = draggedWidget ? getWidgetSpan(draggedWidget.size) : null;
+  const backgroundPalette = getBackgroundPalette(state.backgroundPalette);
   const boardStyle = {
     "--dashboard-columns": DASHBOARD_COLUMNS,
-    "--dashboard-rows": DASHBOARD_ROWS
+    "--dashboard-rows": DASHBOARD_ROWS,
+    "--bg-start": backgroundPalette.bgStart,
+    "--bg-end": backgroundPalette.bgEnd,
+    "--hero-glow": backgroundPalette.heroGlow,
+    "--orb-one": backgroundPalette.orbOne,
+    "--orb-two": backgroundPalette.orbTwo
   } as CSSProperties;
 
   return (
-    <main className={`app-shell theme-${state.theme}`}>
+    <main className={`app-shell theme-${state.theme}`} style={boardStyle}>
       <div className="background-orb background-orb--one" />
       <div className="background-orb background-orb--two" />
 
@@ -187,18 +207,17 @@ function App() {
         editMode={editMode}
         onToggleOpen={() => setIsSettingsOpen((current) => !current)}
         onToggleEditMode={() => setEditMode((current) => !current)}
-        onGreetingChange={(greeting) => updateState({ greeting })}
-        onFocusChange={(focusText) => updateState({ focusText })}
         onThemeChange={(theme: ThemeMode) => updateState({ theme })}
+        onBackgroundPaletteChange={(backgroundPalette) => updateState({ backgroundPalette })}
         onWidgetEnabledChange={setWidgetEnabled}
         onWidgetTitleChange={setWidgetTitle}
+        onWidgetContentChange={setWidgetContent}
         onWidgetSizeChange={setWidgetSize}
         onWidgetToneChange={setWidgetTone}
       />
 
       <section
         className={`widget-grid ${editMode ? "widget-grid--edit" : ""}`}
-        style={boardStyle}
         onDragOver={(event) => {
           if (!editMode || !draggedWidgetId) {
             return;

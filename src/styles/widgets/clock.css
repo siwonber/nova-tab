@@ -1,0 +1,84 @@
+.clock-widget {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  height: 100%;
+}
+
+.clock-widget__time-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.clock-widget strong {
+  font-size: 2.6rem;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.clock-widget__day-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border: 1px solid var(--panel-border);
+  background: var(--chip-bg);
+}
+
+.clock-widget__date {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.clock-widget--s {
+  justify-content: center;
+  gap: 8px;
+}
+
+.clock-widget--s .clock-widget__time-block {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.clock-widget--s strong {
+  font-size: 1.65rem;
+}
+
+.clock-widget--s .clock-widget__day-pill {
+  min-width: 0;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+}
+
+.clock-widget--s .clock-widget__date {
+  font-size: 0.82rem;
+}
+
+.clock-widget--m strong {
+  font-size: 2.55rem;
+}
+
+.clock-widget--l {
+  gap: 18px;
+}
+
+.clock-widget--l strong {
+  font-size: 3.5rem;
+}
+
+.clock-widget--l .clock-widget__day-pill {
+  padding: 10px 14px;
+  font-size: 0.84rem;
+}
+
+.clock-widget--l .clock-widget__date {
+  font-size: 1.08rem;
+}

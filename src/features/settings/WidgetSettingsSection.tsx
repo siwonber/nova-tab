@@ -7,6 +7,7 @@ interface WidgetSettingsSectionProps {
   widgets: WidgetConfig[];
   onWidgetEnabledChange: (widgetId: string, enabled: boolean) => void;
   onWidgetTitleChange: (widgetId: string, title: string) => void;
+  onWidgetContentChange: (widgetId: string, content: string) => void;
   onWidgetSizeChange: (widgetId: string, size: WidgetSize) => void;
   onWidgetToneChange: (widgetId: string, tone: WidgetTone) => void;
 }
@@ -15,6 +16,7 @@ export function WidgetSettingsSection({
   widgets,
   onWidgetEnabledChange,
   onWidgetTitleChange,
+  onWidgetContentChange,
   onWidgetSizeChange,
   onWidgetToneChange
 }: WidgetSettingsSectionProps) {
@@ -49,6 +51,27 @@ export function WidgetSettingsSection({
                     onChange={(event) => onWidgetTitleChange(widget.id, event.target.value)}
                   />
                 </label>
+
+                {widget.kind === "greeting" ? (
+                  <label className="widget-title-field">
+                    <span>Text</span>
+                    <input
+                      value={widget.content ?? ""}
+                      onChange={(event) => onWidgetContentChange(widget.id, event.target.value)}
+                    />
+                  </label>
+                ) : null}
+
+                {widget.kind === "focus" ? (
+                  <label className="widget-title-field">
+                    <span>Text</span>
+                    <textarea
+                      rows={3}
+                      value={widget.content ?? ""}
+                      onChange={(event) => onWidgetContentChange(widget.id, event.target.value)}
+                    />
+                  </label>
+                ) : null}
 
                 <label className="widget-size-field">
                   <span>Size</span>

@@ -1,6 +1,7 @@
 import type { CSSProperties, PropsWithChildren } from "react";
 import type { WidgetTone } from "../types/widgets";
 import { getWidgetToneOption } from "../features/widgets/widgetColors";
+import "../styles/widget-card.css";
 
 interface WidgetCardProps extends PropsWithChildren {
   title: string;

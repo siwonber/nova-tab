@@ -1,4 +1,6 @@
 import type { DashboardState } from "../types/widgets";
+import { findFirstFreePosition } from "../features/widget-board/board";
+import { normalizeWidgetSize } from "../features/widget-board/sizes";
 
 const STORAGE_KEY = "nova-tab-dashboard";
 
@@ -7,10 +9,10 @@ const defaultState: DashboardState = {
   greeting: "What matters today?",
   focusText: "Build a clear start page with zero friction.",
   widgets: [
-    { id: "search-primary", kind: "search", title: "Search", tone: "mint", enabled: true, width: 6, height: 2 },
-    { id: "clock-primary", kind: "clock", title: "Time", tone: "ocean", enabled: true, width: 3, height: 2 },
-    { id: "focus-primary", kind: "focus", title: "Focus", tone: "violet", enabled: true, width: 3, height: 2 },
-    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, width: 6, height: 2 }
+    { id: "search-primary", kind: "search", title: "Search", tone: "mint", enabled: true, size: "M", x: 1, y: 1 },
+    { id: "clock-primary", kind: "clock", title: "Time", tone: "ocean", enabled: true, size: "M", x: 5, y: 1 },
+    { id: "focus-primary", kind: "focus", title: "Focus", tone: "violet", enabled: true, size: "M", x: 1, y: 5 },
+    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "M", x: 5, y: 5 }
   ],
   quickLinks: [
     { id: "gh", label: "GitHub", url: "https://github.com" },
@@ -68,15 +70,40 @@ function normalizeDashboardState(savedState?: Partial<DashboardState>): Dashboar
   const mergedWidgets = defaultState.widgets.map((defaultWidget) => {
     const savedWidget = savedWidgets.find((widget) => widget.kind === defaultWidget.kind || widget.id === defaultWidget.id);
     const isLegacySearchDisabled = defaultWidget.kind === "search" && legacySearchEnabled === false;
-
-    return {
+    const mergedWidget = {
       ...defaultWidget,
       ...savedWidget,
       title: normalizeWidgetTitle(defaultWidget.kind, savedWidget?.title, defaultWidget.title),
       tone: savedWidget?.tone ?? defaultWidget.tone,
       enabled: savedWidget?.enabled ?? (savedWidget ? true : !isLegacySearchDisabled),
-      width: normalizeWidgetSpan(savedWidget?.width, defaultWidget.width),
-      height: normalizeWidgetSpan(savedWidget?.height, defaultWidget.height)
+      size: normalizeWidgetSize(savedWidget?.size, defaultWidget.size),
+      x: typeof savedWidget?.x === "number" ? savedWidget.x : defaultWidget.x,
+      y: typeof savedWidget?.y === "number" ? savedWidget.y : defaultWidget.y
+    };
+
+    if (!mergedWidget.enabled) {
+      return mergedWidget;
+    }
+
+    const freePosition = findFirstFreePosition(
+      defaultState.widgets
+        .map((widget) =>
+          widget.id === mergedWidget.id
+            ? null
+            : savedWidgets.find((savedWidgetCandidate) => savedWidgetCandidate.id === widget.id || savedWidgetCandidate.kind === widget.kind)
+        )
+        .filter(Boolean)
+        .map((widget, index) => ({
+          ...defaultState.widgets[index],
+          ...widget,
+          enabled: (widget as { enabled?: boolean } | undefined)?.enabled ?? true
+        })),
+      mergedWidget
+    );
+
+    return {
+      ...mergedWidget,
+      ...freePosition
     };
   });
 
@@ -88,14 +115,6 @@ function normalizeDashboardState(savedState?: Partial<DashboardState>): Dashboar
   };
 
   return mergedState;
-}
-
-function normalizeWidgetSpan(value: number | undefined, fallback: number) {
-  if (typeof value !== "number" || Number.isNaN(value)) {
-    return fallback;
-  }
-
-  return Math.max(1, Math.min(12, Math.round(value)));
 }
 
 function normalizeWidgetTitle(kind: string, title: string | undefined, fallbackTitle?: string) {

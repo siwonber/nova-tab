@@ -1,15 +1,25 @@
-import { CSSProperties, useEffect, useState } from "react";
+import type { CSSProperties, DragEvent } from "react";
+import { useEffect, useState } from "react";
 import { SettingsPanel } from "./features/settings/SettingsPanel";
+import {
+  DASHBOARD_COLUMNS,
+  DASHBOARD_ROWS,
+  clampWidgetPosition,
+  findFirstFreePosition,
+  getAnchoredDropPosition,
+  hasCollision
+} from "./features/widget-board/board";
 import { loadDashboardState, saveDashboardState } from "./lib/storage";
 import { renderWidget } from "./features/widgets/registry";
-import type { DashboardState, ThemeMode, WidgetConfig, WidgetTone } from "./types/widgets";
+import { getWidgetSpan } from "./features/widget-board/sizes";
+import type { DashboardState, ThemeMode, WidgetSize, WidgetTone } from "./types/widgets";
 
 function App() {
   const [state, setState] = useState<DashboardState | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
-  const [dropTargetWidgetId, setDropTargetWidgetId] = useState<string | null>(null);
+  const [dropTargetPosition, setDropTargetPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     loadDashboardState().then(setState);
@@ -37,9 +47,22 @@ function App() {
         return current;
       }
 
+      const nextWidgets = current.widgets.map((widget) => {
+        if (widget.id !== widgetId) {
+          return widget;
+        }
+
+        if (!enabled) {
+          return { ...widget, enabled: false };
+        }
+
+        const freePosition = findFirstFreePosition(current.widgets, { ...widget, enabled: true });
+        return { ...widget, enabled: true, ...freePosition };
+      });
+
       return {
         ...current,
-        widgets: current.widgets.map((widget) => (widget.id === widgetId ? { ...widget, enabled } : widget))
+        widgets: nextWidgets
       };
     });
   };
@@ -57,6 +80,35 @@ function App() {
     });
   };
 
+  const setWidgetSize = (widgetId: string, size: WidgetSize) => {
+    setState((current) => {
+      if (!current) {
+        return current;
+      }
+
+      const nextWidgets = current.widgets.map((widget) => {
+        if (widget.id !== widgetId) {
+          return widget;
+        }
+
+        const resizedWidget = { ...widget, size };
+        const clampedPosition = clampWidgetPosition(resizedWidget);
+        const positionedWidget = { ...resizedWidget, ...clampedPosition };
+
+        if (!positionedWidget.enabled || !hasCollision(current.widgets, positionedWidget, widgetId)) {
+          return positionedWidget;
+        }
+
+        return { ...positionedWidget, ...findFirstFreePosition(current.widgets, positionedWidget) };
+      });
+
+      return {
+        ...current,
+        widgets: nextWidgets
+      };
+    });
+  };
+
   const setWidgetTitle = (widgetId: string, title: string) => {
     setState((current) => {
       if (!current) {
@@ -70,31 +122,59 @@ function App() {
     });
   };
 
-  const moveWidget = (sourceWidgetId: string, targetWidgetId: string) => {
+  const moveWidgetToCell = (widgetId: string, x: number, y: number) => {
     setState((current) => {
-      if (!current || sourceWidgetId === targetWidgetId) {
+      if (!current) {
         return current;
       }
 
-      const sourceIndex = current.widgets.findIndex((widget) => widget.id === sourceWidgetId);
-      const targetIndex = current.widgets.findIndex((widget) => widget.id === targetWidgetId);
-
-      if (sourceIndex === -1 || targetIndex === -1) {
+      const targetWidget = current.widgets.find((widget) => widget.id === widgetId);
+      if (!targetWidget) {
         return current;
       }
 
-      const reorderedWidgets = [...current.widgets];
-      const [movedWidget] = reorderedWidgets.splice(sourceIndex, 1);
-      reorderedWidgets.splice(targetIndex, 0, movedWidget);
+      const anchoredPosition = getAnchoredDropPosition(targetWidget, x, y);
+      const positionedWidget = { ...targetWidget, ...anchoredPosition };
+
+      if (hasCollision(current.widgets, positionedWidget, widgetId)) {
+        return current;
+      }
 
       return {
         ...current,
-        widgets: reorderedWidgets
+        widgets: current.widgets.map((widget) => (widget.id === widgetId ? positionedWidget : widget))
       };
     });
   };
 
+  const updateDropTargetFromPointer = (event: DragEvent<HTMLElement>) => {
+    if (!editMode || !draggedWidgetId) {
+      return;
+    }
+
+    const board = event.currentTarget.getBoundingClientRect();
+    const relativeX = event.clientX - board.left;
+    const relativeY = event.clientY - board.top;
+
+    if (relativeX < 0 || relativeY < 0 || relativeX > board.width || relativeY > board.height) {
+      return;
+    }
+
+    const cellWidth = board.width / DASHBOARD_COLUMNS;
+    const cellHeight = board.height / DASHBOARD_ROWS;
+    const x = Math.min(DASHBOARD_COLUMNS, Math.max(1, Math.floor(relativeX / cellWidth) + 1));
+    const y = Math.min(DASHBOARD_ROWS, Math.max(1, Math.floor(relativeY / cellHeight) + 1));
+
+    setDropTargetPosition({ x, y });
+  };
+
   const enabledWidgets = state.widgets.filter((widget) => widget.enabled);
+  const draggedWidget = draggedWidgetId ? state.widgets.find((widget) => widget.id === draggedWidgetId) ?? null : null;
+  const draggedWidgetSpan = draggedWidget ? getWidgetSpan(draggedWidget.size) : null;
+  const boardStyle = {
+    "--dashboard-columns": DASHBOARD_COLUMNS,
+    "--dashboard-rows": DASHBOARD_ROWS
+  } as CSSProperties;
 
   return (
     <main className={`app-shell theme-${state.theme}`}>
@@ -112,28 +192,93 @@ function App() {
         onThemeChange={(theme: ThemeMode) => updateState({ theme })}
         onWidgetEnabledChange={setWidgetEnabled}
         onWidgetTitleChange={setWidgetTitle}
+        onWidgetSizeChange={setWidgetSize}
         onWidgetToneChange={setWidgetTone}
       />
 
-      <section className="hero">
-        <p className="eyebrow">Firefox New Tab</p>
-        <h1>{state.greeting}</h1>
-        <p className="hero-copy">
-          A modular starting point for widgets, routines, and future integrations.
-        </p>
-      </section>
+      <section
+        className={`widget-grid ${editMode ? "widget-grid--edit" : ""}`}
+        style={boardStyle}
+        onDragOver={(event) => {
+          if (!editMode || !draggedWidgetId) {
+            return;
+          }
 
-      <section className={`widget-grid ${editMode ? "widget-grid--edit" : ""}`}>
+          event.preventDefault();
+          event.dataTransfer.dropEffect = "move";
+          updateDropTargetFromPointer(event);
+        }}
+        onDrop={(event) => {
+          if (!editMode || !draggedWidgetId || !dropTargetPosition) {
+            return;
+          }
+
+          event.preventDefault();
+          moveWidgetToCell(draggedWidgetId, dropTargetPosition.x, dropTargetPosition.y);
+          setDraggedWidgetId(null);
+          setDropTargetPosition(null);
+        }}
+      >
+        {editMode ? (
+          <div className="widget-grid__board" aria-hidden="true">
+            {Array.from({ length: DASHBOARD_COLUMNS * DASHBOARD_ROWS }, (_, index) => {
+              const x = (index % DASHBOARD_COLUMNS) + 1;
+              const y = Math.floor(index / DASHBOARD_COLUMNS) + 1;
+              const previewPosition =
+                draggedWidget && dropTargetPosition
+                  ? getAnchoredDropPosition(draggedWidget, dropTargetPosition.x, dropTargetPosition.y)
+                  : null;
+              const isPreviewCell =
+                Boolean(previewPosition && draggedWidgetSpan) &&
+                x >= previewPosition!.x &&
+                x < previewPosition!.x + draggedWidgetSpan!.width &&
+                y >= previewPosition!.y &&
+                y < previewPosition!.y + draggedWidgetSpan!.height;
+
+              return (
+                <div
+                  key={`cell-${x}-${y}`}
+                  className={`widget-grid__cell ${isPreviewCell ? "widget-grid__cell--active" : ""}`}
+                  style={{ gridColumnStart: x, gridRowStart: y } as CSSProperties}
+                  onDragOver={(event) => {
+                    if (!editMode || !draggedWidgetId) {
+                      return;
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    setDropTargetPosition({ x, y });
+                  }}
+                  onDrop={(event) => {
+                    if (!editMode || !draggedWidgetId) {
+                      return;
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    moveWidgetToCell(draggedWidgetId, x, y);
+                    setDraggedWidgetId(null);
+                    setDropTargetPosition(null);
+                  }}
+                />
+              );
+            })}
+          </div>
+        ) : null}
         {enabledWidgets.map((widget) => (
+          (() => {
+            const span = getWidgetSpan(widget.size);
+            const position = clampWidgetPosition(widget);
+            return (
           <div
             key={widget.id}
             className={`widget-slot ${draggedWidgetId === widget.id ? "widget-slot--dragging" : ""} ${
-              dropTargetWidgetId === widget.id ? "widget-slot--drop-target" : ""
+              dropTargetPosition?.x === position.x && dropTargetPosition?.y === position.y ? "widget-slot--drop-target" : ""
             }`}
             style={
               {
-                "--widget-col-span": widget.width,
-                "--widget-row-span": widget.height
+                gridColumn: `${position.x} / span ${span.width}`,
+                gridRow: `${position.y} / span ${span.height}`
               } as CSSProperties
             }
             draggable={editMode}
@@ -142,43 +287,23 @@ function App() {
                 return;
               }
 
+              const anchorX = position.x + Math.floor(span.width / 2);
+              const anchorY = position.y + Math.floor(span.height / 2);
+
               setDraggedWidgetId(widget.id);
-              setDropTargetWidgetId(widget.id);
+              setDropTargetPosition({ x: anchorX, y: anchorY });
               event.dataTransfer.effectAllowed = "move";
               event.dataTransfer.setData("text/plain", widget.id);
             }}
-            onDragEnter={() => {
-              if (!editMode || !draggedWidgetId || draggedWidgetId === widget.id) {
-                return;
-              }
-
-              setDropTargetWidgetId(widget.id);
-            }}
-            onDragOver={(event) => {
-              if (!editMode) {
-                return;
-              }
-
-              event.preventDefault();
-              event.dataTransfer.dropEffect = "move";
-            }}
-            onDrop={(event) => {
-              if (!editMode || !draggedWidgetId) {
-                return;
-              }
-
-              event.preventDefault();
-              moveWidget(draggedWidgetId, widget.id);
-              setDraggedWidgetId(null);
-              setDropTargetWidgetId(null);
-            }}
             onDragEnd={() => {
               setDraggedWidgetId(null);
-              setDropTargetWidgetId(null);
+              setDropTargetPosition(null);
             }}
           >
             {renderWidget(widget, state)}
           </div>
+            );
+          })()
         ))}
       </section>
     </main>

@@ -1,4 +1,4 @@
-import type { DashboardState, ThemeMode, WidgetTone } from "../../types/widgets";
+import type { DashboardState, ThemeMode, WidgetSize, WidgetTone } from "../../types/widgets";
 import { WidgetSettingsSection } from "./WidgetSettingsSection";
 
 interface SettingsPanelProps {
@@ -12,6 +12,7 @@ interface SettingsPanelProps {
   onThemeChange: (value: ThemeMode) => void;
   onWidgetEnabledChange: (widgetId: string, enabled: boolean) => void;
   onWidgetTitleChange: (widgetId: string, title: string) => void;
+  onWidgetSizeChange: (widgetId: string, size: WidgetSize) => void;
   onWidgetToneChange: (widgetId: string, tone: WidgetTone) => void;
 }
 
@@ -32,6 +33,7 @@ export function SettingsPanel({
   onThemeChange,
   onWidgetEnabledChange,
   onWidgetTitleChange,
+  onWidgetSizeChange,
   onWidgetToneChange
 }: SettingsPanelProps) {
   return (
@@ -89,6 +91,7 @@ export function SettingsPanel({
           widgets={state.widgets}
           onWidgetEnabledChange={onWidgetEnabledChange}
           onWidgetTitleChange={onWidgetTitleChange}
+          onWidgetSizeChange={onWidgetSizeChange}
           onWidgetToneChange={onWidgetToneChange}
         />
       </section>

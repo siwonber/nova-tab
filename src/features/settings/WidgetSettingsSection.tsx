@@ -1,11 +1,13 @@
 import type { CSSProperties } from "react";
 import { widgetToneOptions } from "../widgets/widgetColors";
-import type { WidgetConfig, WidgetTone } from "../../types/widgets";
+import { widgetSizeOptions } from "../widget-board/sizes";
+import type { WidgetConfig, WidgetSize, WidgetTone } from "../../types/widgets";
 
 interface WidgetSettingsSectionProps {
   widgets: WidgetConfig[];
   onWidgetEnabledChange: (widgetId: string, enabled: boolean) => void;
   onWidgetTitleChange: (widgetId: string, title: string) => void;
+  onWidgetSizeChange: (widgetId: string, size: WidgetSize) => void;
   onWidgetToneChange: (widgetId: string, tone: WidgetTone) => void;
 }
 
@@ -13,6 +15,7 @@ export function WidgetSettingsSection({
   widgets,
   onWidgetEnabledChange,
   onWidgetTitleChange,
+  onWidgetSizeChange,
   onWidgetToneChange
 }: WidgetSettingsSectionProps) {
   return (
@@ -45,6 +48,23 @@ export function WidgetSettingsSection({
                     value={widget.title}
                     onChange={(event) => onWidgetTitleChange(widget.id, event.target.value)}
                   />
+                </label>
+
+                <label className="widget-size-field">
+                  <span>Size</span>
+                  <div className="widget-size-options" role="group" aria-label={`${widget.title} size`}>
+                    {widgetSizeOptions.map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        className={`widget-size-option ${widget.size === size ? "widget-size-option--active" : ""}`}
+                        aria-pressed={widget.size === size}
+                        onClick={() => onWidgetSizeChange(widget.id, size)}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
                 </label>
 
                 <div className="widget-color-item__swatches" role="group" aria-label={`${widget.title} colors`}>

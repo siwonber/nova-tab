@@ -2,6 +2,7 @@ export type ThemeMode = "aurora" | "paper" | "midnight";
 
 export type WidgetKind = "clock" | "focus" | "links" | "search";
 export type WidgetTone = "default" | "mint" | "ocean" | "sunset" | "rose" | "violet";
+export type WidgetSize = "S" | "M" | "L";
 
 export interface WidgetConfig {
   id: string;
@@ -9,8 +10,9 @@ export interface WidgetConfig {
   title: string;
   tone: WidgetTone;
   enabled: boolean;
-  width: number;
-  height: number;
+  size: WidgetSize;
+  x: number;
+  y: number;
 }
 
 export interface QuickLink {

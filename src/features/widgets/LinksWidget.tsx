@@ -10,7 +10,7 @@ interface LinksWidgetProps {
 export function LinksWidget({ widget, state }: LinksWidgetProps) {
   return (
     <WidgetCard title={widget.title} tone={widget.tone}>
-      <div className="links-widget">
+      <div className={`links-widget links-widget--${widget.size.toLowerCase()}`}>
         {state.quickLinks.map((link) => (
           <a key={link.id} href={link.url}>
             {link.label}

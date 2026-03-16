@@ -8,9 +8,9 @@ interface WidgetSpan {
 export const widgetSizeOptions: WidgetSize[] = ["S", "M", "L"];
 
 const widgetSizeMap: Record<WidgetSize, WidgetSpan> = {
-  S: { width: 2, height: 2 },
-  M: { width: 3, height: 3 },
-  L: { width: 4, height: 4 }
+  S: { width: 3, height: 3 },
+  M: { width: 5, height: 3 },
+  L: { width: 7, height: 5 }
 };
 
 export function getWidgetSpan(size: WidgetSize): WidgetSpan {

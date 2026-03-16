@@ -1,8 +1,8 @@
 import type { WidgetConfig } from "../../types/widgets";
 import { getWidgetSpan } from "./sizes";
 
-export const DASHBOARD_COLUMNS = 12;
-export const DASHBOARD_ROWS = 10;
+export const DASHBOARD_COLUMNS = 13;
+export const DASHBOARD_ROWS = 11;
 
 interface Position {
   x: number;

@@ -73,9 +73,9 @@ export function WidgetSettingsSection({
                   </label>
                 ) : null}
 
-                <label className="widget-size-field">
-                  <span>Size</span>
-                  <div className="widget-size-options" role="group" aria-label={`${widget.title} size`}>
+                <div className="widget-size-field">
+                  <span id={`${widget.id}-size-label`}>Size</span>
+                  <div className="widget-size-options" role="group" aria-labelledby={`${widget.id}-size-label`}>
                     {widgetSizeOptions.map((size) => (
                       <button
                         key={size}
@@ -88,7 +88,7 @@ export function WidgetSettingsSection({
                       </button>
                     ))}
                   </div>
-                </label>
+                </div>
 
                 <div className="widget-color-item__swatches" role="group" aria-label={`${widget.title} colors`}>
                   {widgetToneOptions.map((option) => (

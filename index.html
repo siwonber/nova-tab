@@ -160,9 +160,9 @@
           }
         };
         const sizeMap = {
-          S: { width: 2, height: 2 },
-          M: { width: 3, height: 3 },
-          L: { width: 4, height: 4 }
+          S: { width: 3, height: 3 },
+          M: { width: 5, height: 3 },
+          L: { width: 7, height: 5 }
         };
 
         try {
@@ -280,8 +280,8 @@
         position: absolute;
         inset: 24px;
         display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        grid-template-rows: repeat(10, minmax(0, 1fr));
+        grid-template-columns: repeat(13, minmax(0, 1fr));
+        grid-template-rows: repeat(11, minmax(0, 1fr));
         gap: 12px;
         z-index: 1;
       }

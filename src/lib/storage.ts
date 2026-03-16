@@ -19,8 +19,8 @@ const defaultState: DashboardState = {
       x: 1,
       y: 1
     },
-    { id: "search-primary", kind: "search", title: "Search", tone: "mint", enabled: true, size: "M", x: 4, y: 1 },
-    { id: "clock-primary", kind: "clock", title: "Time", tone: "ocean", enabled: true, size: "M", x: 7, y: 1 },
+    { id: "search-primary", kind: "search", title: "Search", tone: "mint", enabled: true, size: "M", x: 6, y: 1 },
+    { id: "clock-primary", kind: "clock", title: "Time", tone: "ocean", enabled: true, size: "S", x: 11, y: 1 },
     {
       id: "focus-primary",
       kind: "focus",
@@ -29,10 +29,10 @@ const defaultState: DashboardState = {
       enabled: true,
       size: "M",
       content: "Build a clear start page with zero friction.",
-      x: 10,
-      y: 1
+      x: 1,
+      y: 4
     },
-    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "L", x: 1, y: 4 }
+    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "L", x: 7, y: 4 }
   ],
   quickLinks: [
     { id: "gh", label: "GitHub", url: "https://github.com" },

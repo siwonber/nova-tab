@@ -9,7 +9,9 @@ interface FocusWidgetProps {
 export function FocusWidget({ widget }: FocusWidgetProps) {
   return (
     <WidgetCard title={widget.title} tone={widget.tone}>
-      <p className="focus-widget">{widget.content}</p>
+      <div className={`focus-widget focus-widget--${widget.size.toLowerCase()}`}>
+        <p>{widget.content}</p>
+      </div>
     </WidgetCard>
   );
 }

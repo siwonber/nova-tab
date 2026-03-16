@@ -9,7 +9,7 @@ interface GreetingWidgetProps {
 export function GreetingWidget({ widget }: GreetingWidgetProps) {
   return (
     <WidgetCard title={widget.title} tone={widget.tone}>
-      <div className="greeting-widget">
+      <div className={`greeting-widget greeting-widget--${widget.size.toLowerCase()}`}>
         <strong>{widget.content}</strong>
       </div>
     </WidgetCard>

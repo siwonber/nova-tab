@@ -2,24 +2,24 @@
   --ui-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --bg-start: #b79467;
   --bg-end: #6f4d31;
-  --panel: rgba(207, 188, 163, 0.78);
+  --panel: rgba(191, 168, 138, 0.8);
   --panel-border: rgba(90, 62, 33, 0.18);
-  --text-main: #2f2116;
-  --text-muted: rgba(47, 33, 22, 0.64);
+  --text-main: #24170f;
+  --text-muted: rgba(36, 23, 15, 0.72);
   --hero-glow: rgba(150, 104, 56, 0.05);
   --shadow-color: rgba(58, 36, 18, 0.18);
   --orb-one: #c79a62;
   --orb-two: #8d623c;
-  --control-bg: rgba(216, 198, 173, 0.54);
+  --control-bg: rgba(198, 177, 148, 0.58);
   --control-accent: #8f5a2c;
   --edit-outline: rgba(90, 62, 33, 0.24);
   --chip-bg: rgba(255, 248, 237, 0.38);
   --search-input-border: rgba(99, 72, 44, 0.16);
-  --search-input-bg: rgba(220, 202, 177, 0.58);
+  --search-input-bg: rgba(197, 176, 146, 0.7);
   --search-button-border: rgba(168, 106, 63, 0.28);
   --search-button-bg-start: rgba(194, 148, 100, 0.34);
   --search-button-bg-end: rgba(141, 98, 60, 0.2);
-  --search-button-soft-bg: rgba(220, 202, 177, 0.34);
+  --search-button-soft-bg: rgba(188, 164, 132, 0.54);
   --trigger-radius: 18px;
   --panel-radius: 20px;
   --card-radius: 18px;
@@ -131,29 +131,38 @@
 
 .theme-paper .widget-card {
   background:
-    linear-gradient(180deg, rgba(227, 210, 185, 0.94), rgba(198, 174, 145, 0.92)),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--widget-accent) 16%, transparent), transparent 22%),
+    linear-gradient(180deg, color-mix(in srgb, rgba(206, 184, 151, 0.94) 86%, var(--widget-accent) 14%), color-mix(in srgb, rgba(173, 144, 112, 0.94) 88%, var(--widget-accent) 12%)),
     repeating-linear-gradient(
       180deg,
       transparent 0,
       transparent 31px,
-      rgba(108, 81, 52, 0.11) 31px,
-      rgba(108, 81, 52, 0.11) 32px
+      color-mix(in srgb, rgba(98, 73, 47, 0.13) 82%, var(--widget-accent) 18%) 31px,
+      color-mix(in srgb, rgba(98, 73, 47, 0.13) 82%, var(--widget-accent) 18%) 32px
     );
-  border-color: rgba(92, 67, 39, 0.28);
+  border-color: color-mix(in srgb, rgba(82, 58, 34, 0.28) 64%, var(--widget-border-color) 36%);
   backdrop-filter: blur(0);
   box-shadow:
-    0 18px 26px rgba(70, 46, 24, 0.14),
-    0 2px 0 rgba(130, 96, 58, 0.14),
-    inset 0 1px 0 rgba(243, 227, 204, 0.16),
-    inset 0 0 0 1px rgba(121, 90, 56, 0.12);
+    0 18px 26px rgba(70, 46, 24, 0.16),
+    0 2px 0 rgba(112, 81, 48, 0.16),
+    inset 0 1px 0 rgba(224, 201, 170, 0.1),
+    inset 0 0 0 1px color-mix(in srgb, rgba(102, 74, 43, 0.12) 70%, var(--widget-accent) 30%);
+}
+
+.theme-paper .widget-card,
+.theme-paper .widget-card__content,
+.theme-paper .widget-card input,
+.theme-paper .widget-card textarea,
+.theme-paper .widget-card button {
+  color: #24170f;
 }
 
 .theme-paper .widget-card::after {
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(90deg, transparent 0 18px, rgba(152, 76, 58, 0.24) 18px 20px, transparent 20px 100%),
-    radial-gradient(circle at top right, rgba(169, 132, 92, 0.08), transparent 18%);
+    linear-gradient(90deg, transparent 0 18px, color-mix(in srgb, rgba(152, 76, 58, 0.18) 60%, var(--widget-accent) 40%) 18px 20px, transparent 20px 100%),
+    radial-gradient(circle at top right, color-mix(in srgb, rgba(169, 132, 92, 0.06) 58%, var(--widget-accent) 42%), transparent 18%);
   opacity: 0.56;
 }
 
@@ -161,7 +170,7 @@
   width: 18px;
   height: 8px;
   border-radius: 2px;
-  background: rgba(168, 126, 80, 0.7);
+  background: color-mix(in srgb, rgba(168, 126, 80, 0.56) 54%, var(--widget-accent) 46%);
   box-shadow:
     0 2px 4px rgba(87, 58, 29, 0.14),
     inset 0 1px 0 rgba(230, 204, 171, 0.16);
@@ -177,8 +186,59 @@
 }
 
 .theme-paper .widget-card__header {
-  color: rgba(73, 50, 28, 0.9);
+  color: rgba(64, 42, 23, 0.92);
   font-size: 0.84rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+}
+
+.theme-paper .clock-widget__backdrop {
+  color: rgba(79, 54, 30, 0.12);
+}
+
+.theme-paper .clock-widget__period {
+  background: color-mix(in srgb, rgba(196, 173, 142, 0.72) 70%, var(--widget-accent) 30%);
+  color: rgba(64, 42, 23, 0.88);
+}
+
+.theme-paper .clock-widget__meta {
+  border-color: rgba(99, 72, 44, 0.14);
+}
+
+.theme-paper .greeting-widget strong,
+.theme-paper .focus-widget,
+.theme-paper .search-widget__label,
+.theme-paper .search-widget__hint,
+.theme-paper .clock-widget__weekday,
+.theme-paper .clock-widget__date,
+.theme-paper .clock-widget__caption,
+.theme-paper .clock-widget__caption--secondary {
+  color: #2b1c12;
+}
+
+.theme-paper .links-widget a {
+  color: #2b1c12;
+  border-color: color-mix(in srgb, rgba(96, 70, 42, 0.16) 64%, var(--widget-accent) 36%);
+  background: color-mix(in srgb, rgba(218, 196, 165, 0.46) 74%, var(--widget-accent) 26%);
+}
+
+.theme-paper .search-widget__input-row input {
+  color: #24170f;
+  border-color: color-mix(in srgb, rgba(96, 70, 42, 0.16) 70%, var(--widget-accent) 30%);
+  background: color-mix(in srgb, rgba(207, 185, 154, 0.64) 76%, var(--widget-accent) 24%);
+}
+
+.theme-paper .search-widget__input-row input::placeholder {
+  color: rgba(51, 34, 21, 0.58);
+}
+
+.theme-paper .search-widget__input-row button {
+  color: #24170f;
+  border-color: color-mix(in srgb, rgba(120, 82, 45, 0.2) 58%, var(--widget-accent) 42%);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, rgba(183, 141, 95, 0.62) 54%, var(--widget-accent) 46%),
+      color-mix(in srgb, rgba(143, 98, 58, 0.56) 54%, var(--widget-accent) 46%)
+    );
 }

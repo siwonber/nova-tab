@@ -78,7 +78,7 @@ export function SearchWidget({ widget }: SearchWidgetProps) {
 
   return (
     <WidgetCard title={widget.title} tone={widget.tone}>
-      <form className="search-widget" onSubmit={(event) => void handleSubmit(event)}>
+      <form className={`search-widget search-widget--${widget.size.toLowerCase()}`} onSubmit={(event) => void handleSubmit(event)}>
         <label className="search-widget__field">
           <span className="search-widget__label">
             {engineName ? `Search with ${engineName}` : "Firefox default search"}

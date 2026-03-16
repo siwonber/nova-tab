@@ -1,4 +1,5 @@
 import type { DashboardState, ThemeMode, WidgetSize, WidgetTone } from "../../types/widgets";
+import "../../styles/settings.css";
 import { BackgroundSettingsSection } from "./BackgroundSettingsSection";
 import { WidgetSettingsSection } from "./WidgetSettingsSection";
 

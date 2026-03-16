@@ -1,5 +1,39 @@
 .focus-widget {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.focus-widget p {
   margin: 0;
-  font-size: 1.1rem;
   max-width: 28ch;
+}
+
+.focus-widget--s {
+  align-items: center;
+}
+
+.focus-widget--s p {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.focus-widget--m {
+  align-items: center;
+}
+
+.focus-widget--m p {
+  font-size: 1.18rem;
+  line-height: 1.5;
+  max-width: 24ch;
+}
+
+.focus-widget--l {
+  align-items: center;
+}
+
+.focus-widget--l p {
+  font-size: 1.45rem;
+  line-height: 1.48;
+  max-width: 22ch;
 }

@@ -2,6 +2,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  align-content: flex-start;
+  height: 100%;
 }
 
 .links-widget a {
@@ -11,4 +13,36 @@
   border-radius: 999px;
   border: 1px solid var(--panel-border);
   background: var(--chip-bg);
+}
+
+.links-widget--s {
+  align-content: center;
+}
+
+.links-widget--s a {
+  padding: 8px 12px;
+  font-size: 0.82rem;
+}
+
+.links-widget--m a {
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+.links-widget--l {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  align-content: stretch;
+}
+
+.links-widget--l a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 68px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 0.98rem;
 }

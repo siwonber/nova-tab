@@ -1,6 +1,6 @@
 export type ThemeMode = "aurora" | "paper" | "midnight" | "ember" | "fjord";
 
-export type WidgetKind = "greeting" | "clock" | "focus" | "links" | "search";
+export type WidgetKind = "greeting" | "clock" | "focus" | "links" | "search" | "github";
 export type WidgetTone = "default" | "mint" | "ocean" | "sunset" | "rose" | "pink" | "wine" | "violet" | "black";
 export type WidgetSize = "S" | "M" | "L";
 

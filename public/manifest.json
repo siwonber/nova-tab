@@ -12,7 +12,7 @@
   "background": {
     "scripts": ["background.js"]
   },
-  "permissions": ["storage", "search"],
+  "permissions": ["storage", "search", "https://github.com/*", "https://github-contributions-api.jogruber.de/*"],
   "chrome_url_overrides": {
     "newtab": "index.html"
   }

@@ -1,0 +1,222 @@
+.github-widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.github-widget::before {
+  content: "";
+  position: absolute;
+  inset: -12% 28% auto -10%;
+  height: 55%;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--widget-accent) 18%, transparent), transparent 68%);
+  opacity: 0.8;
+  pointer-events: none;
+  filter: blur(28px);
+}
+
+.github-widget__topline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.github-widget__topline strong {
+  display: block;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.github-widget__topline p,
+.github-widget__footer span {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.github-widget__badge {
+  padding: 9px 12px;
+  border-radius: var(--chip-radius);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--widget-accent) 18%, transparent), color-mix(in srgb, var(--widget-surface) 94%, transparent));
+  border: 1px solid color-mix(in srgb, var(--widget-border-color) 78%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 24px color-mix(in srgb, var(--widget-glow) 38%, transparent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.github-widget__calendar-frame,
+.github-widget__empty {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  flex: 1;
+  border-radius: calc(var(--card-radius) - 10px);
+  border: 1px solid color-mix(in srgb, var(--widget-border-color) 52%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--widget-accent) 10%, transparent), transparent 22%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--widget-accent) 16%, transparent), transparent 26%),
+    linear-gradient(180deg, color-mix(in srgb, var(--widget-surface) 82%, rgba(255, 255, 255, 0.03)), color-mix(in srgb, var(--widget-surface) 96%, rgba(0, 0, 0, 0.08)));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px color-mix(in srgb, var(--widget-border-color) 14%, transparent);
+  overflow: hidden;
+}
+
+.github-widget__calendar-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 6%, color-mix(in srgb, var(--widget-border-color) 12%, transparent) 6% 6.2%, transparent 6.2% 100%),
+    linear-gradient(180deg, transparent 0 12%, color-mix(in srgb, var(--widget-border-color) 10%, transparent) 12% 12.2%, transparent 12.2% 100%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.github-widget__calendar-frame {
+  padding: 14px;
+}
+
+.github-widget__calendar-grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(var(--github-weeks), minmax(0, 1fr));
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  grid-auto-flow: column;
+  gap: 5px;
+  position: relative;
+  z-index: 1;
+}
+
+.github-widget__cell {
+  border-radius: 5px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    color-mix(in srgb, var(--widget-accent) 9%, rgba(255, 255, 255, 0.04));
+  border: 1px solid color-mix(in srgb, var(--widget-border-color) 32%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.github-widget__cell--level-1 {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent),
+    color-mix(in srgb, var(--widget-accent) 24%, rgba(255, 255, 255, 0.04));
+}
+
+.github-widget__cell--level-2 {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
+    color-mix(in srgb, var(--widget-accent) 44%, rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px color-mix(in srgb, var(--widget-accent) 8%, transparent);
+}
+
+.github-widget__cell--level-3 {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent),
+    color-mix(in srgb, var(--widget-accent) 66%, rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 10px color-mix(in srgb, var(--widget-glow) 20%, transparent);
+}
+
+.github-widget__cell--level-4 {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent),
+    color-mix(in srgb, var(--widget-accent) 88%, rgba(255, 255, 255, 0.04));
+  border-color: color-mix(in srgb, var(--widget-border-color) 72%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 0 14px color-mix(in srgb, var(--widget-glow) 28%, transparent);
+}
+
+.github-widget__empty span {
+  max-width: 18ch;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.github-widget__footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 2px;
+}
+
+.github-widget__footer a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--widget-border-color) 70%, transparent);
+  transition: border-color 160ms ease, opacity 160ms ease;
+}
+
+.github-widget__footer a:hover {
+  border-color: color-mix(in srgb, var(--widget-accent) 88%, transparent);
+  opacity: 0.92;
+}
+
+.github-widget--s {
+  gap: 12px;
+}
+
+.github-widget--s .github-widget__topline {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.github-widget--s .github-widget__badge {
+  display: none;
+}
+
+.github-widget--s .github-widget__footer {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.github-widget--s .github-widget__calendar-grid {
+  gap: 4px;
+}
+
+.github-widget--m .github-widget__calendar-grid {
+  gap: 5px;
+}
+
+.github-widget--l {
+  gap: 18px;
+}
+
+.github-widget--l .github-widget__topline strong {
+  font-size: 1.15rem;
+}
+
+.github-widget--l .github-widget__topline p,
+.github-widget--l .github-widget__footer span {
+  font-size: 0.94rem;
+}
+
+.github-widget--l .github-widget__calendar-grid {
+  gap: 6px;
+}

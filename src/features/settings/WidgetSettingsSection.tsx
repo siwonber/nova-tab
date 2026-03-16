@@ -73,6 +73,19 @@ export function WidgetSettingsSection({
                   </label>
                 ) : null}
 
+                {widget.kind === "github" ? (
+                  <label className="widget-title-field">
+                    <span>Username</span>
+                    <input
+                      value={widget.content ?? ""}
+                      placeholder="octocat"
+                      autoComplete="off"
+                      spellCheck={false}
+                      onChange={(event) => onWidgetContentChange(widget.id, event.target.value)}
+                    />
+                  </label>
+                ) : null}
+
                 <div className="widget-size-field">
                   <span id={`${widget.id}-size-label`}>Size</span>
                   <div className="widget-size-options" role="group" aria-labelledby={`${widget.id}-size-label`}>

@@ -2,6 +2,7 @@ import type { DashboardState, WidgetConfig } from "../../types/widgets";
 import { ClockWidget } from "./ClockWidget";
 import { FocusWidget } from "./FocusWidget";
 import { GreetingWidget } from "./GreetingWidget";
+import { GitHubWidget } from "./GitHubWidget";
 import { LinksWidget } from "./LinksWidget";
 import { SearchWidget } from "./SearchWidget";
 
@@ -17,6 +18,8 @@ export function renderWidget(widget: WidgetConfig, state: DashboardState) {
       return <FocusWidget widget={widget} />;
     case "links":
       return <LinksWidget widget={widget} state={state} />;
+    case "github":
+      return <GitHubWidget widget={widget} />;
     default:
       return null;
   }

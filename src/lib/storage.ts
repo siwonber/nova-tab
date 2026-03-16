@@ -32,7 +32,8 @@ const defaultState: DashboardState = {
       x: 1,
       y: 4
     },
-    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "L", x: 7, y: 4 }
+    { id: "links-primary", kind: "links", title: "Quick Links", tone: "sunset", enabled: true, size: "L", x: 7, y: 4 },
+    { id: "github-primary", kind: "github", title: "GitHub", tone: "black", enabled: false, size: "M", content: "", x: 1, y: 8 }
   ],
   quickLinks: [
     { id: "gh", label: "GitHub", url: "https://github.com" },
@@ -203,6 +204,8 @@ function normalizeWidgetTitle(kind: string, title: string | undefined, fallbackT
       return title === "Fokus" ? "Focus" : title;
     case "links":
       return title === "Schnellzugriff" ? "Quick Links" : title;
+    case "github":
+      return title;
     default:
       return title;
   }
@@ -220,6 +223,8 @@ function getDefaultWidgetTitle(kind: string) {
       return "Focus";
     case "links":
       return "Quick Links";
+    case "github":
+      return "GitHub";
     default:
       return "Widget";
   }
@@ -242,6 +247,10 @@ function normalizeWidgetContent(
 
   if (kind === "focus" && legacyFocusText) {
     return legacyFocusText;
+  }
+
+  if (kind === "github") {
+    return typeof content === "string" ? content : "";
   }
 
   return fallbackContent;

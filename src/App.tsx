@@ -181,9 +181,29 @@ function App() {
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--boot-bg-start", backgroundPalette.bgStart);
+    root.style.setProperty("--boot-bg-mid", backgroundPalette.bgMid);
     root.style.setProperty("--boot-bg-end", backgroundPalette.bgEnd);
     root.style.setProperty("--boot-hero-glow", backgroundPalette.heroGlow);
-  }, [backgroundPalette.bgEnd, backgroundPalette.bgStart, backgroundPalette.heroGlow]);
+    root.style.setProperty("--boot-hero-glow-secondary", backgroundPalette.heroGlowSecondary);
+    root.style.setProperty("--boot-mesh-tint", backgroundPalette.meshTint);
+    root.style.setProperty("--boot-pattern-ink", backgroundPalette.patternInk);
+    root.style.setProperty("--boot-pattern-highlight", backgroundPalette.patternHighlight);
+    root.style.setProperty("--boot-orb-one", backgroundPalette.orbOne);
+    root.style.setProperty("--boot-orb-two", backgroundPalette.orbTwo);
+    root.style.setProperty("--boot-orb-three", backgroundPalette.orbThree);
+  }, [
+    backgroundPalette.bgEnd,
+    backgroundPalette.bgMid,
+    backgroundPalette.bgStart,
+    backgroundPalette.heroGlow,
+    backgroundPalette.heroGlowSecondary,
+    backgroundPalette.meshTint,
+    backgroundPalette.patternHighlight,
+    backgroundPalette.patternInk,
+    backgroundPalette.orbOne,
+    backgroundPalette.orbThree,
+    backgroundPalette.orbTwo
+  ]);
 
   const boardStyle = {
     "--dashboard-columns": DASHBOARD_COLUMNS,
@@ -192,10 +212,16 @@ function App() {
       ? {}
       : {
           "--bg-start": backgroundPalette.bgStart,
+          "--bg-mid": backgroundPalette.bgMid,
           "--bg-end": backgroundPalette.bgEnd,
           "--hero-glow": backgroundPalette.heroGlow,
+          "--hero-glow-secondary": backgroundPalette.heroGlowSecondary,
+          "--mesh-tint": backgroundPalette.meshTint,
+          "--pattern-ink": backgroundPalette.patternInk,
+          "--pattern-highlight": backgroundPalette.patternHighlight,
           "--orb-one": backgroundPalette.orbOne,
-          "--orb-two": backgroundPalette.orbTwo
+          "--orb-two": backgroundPalette.orbTwo,
+          "--orb-three": backgroundPalette.orbThree
         })
   } as CSSProperties;
 
@@ -203,6 +229,7 @@ function App() {
     <main className={`app-shell theme-${state.theme} palette-${state.backgroundPalette}`} style={boardStyle}>
       <div className="background-orb background-orb--one" />
       <div className="background-orb background-orb--two" />
+      <div className="background-orb background-orb--three" />
 
       <SettingsPanel
         state={state}

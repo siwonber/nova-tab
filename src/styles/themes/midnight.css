@@ -33,44 +33,66 @@
 }
 
 .theme-midnight.app-shell {
-  background:
-    radial-gradient(circle at 50% -10%, rgba(148, 136, 255, 0.3), transparent 28%),
-    radial-gradient(circle at 82% 24%, rgba(255, 139, 102, 0.18), transparent 18%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
-    linear-gradient(145deg, var(--bg-start), var(--bg-end));
+  --app-background:
+    radial-gradient(circle at 48% -8%, color-mix(in srgb, var(--hero-glow) 135%, transparent), transparent 0 28%),
+    radial-gradient(circle at 84% 22%, color-mix(in srgb, var(--hero-glow-secondary) 115%, transparent), transparent 0 18%),
+    linear-gradient(180deg, color-mix(in srgb, white 5%, transparent), transparent 24%),
+    linear-gradient(145deg, var(--bg-start), var(--bg-mid) 54%, var(--bg-end));
+  --orb-one-width: 400px;
+  --orb-one-height: 400px;
+  --orb-one-top: -90px;
+  --orb-one-right: 9%;
+  --orb-two-width: 300px;
+  --orb-two-height: 300px;
+  --orb-two-right: 3%;
+  --orb-two-bottom: 10%;
+  --orb-three-width: 520px;
+  --orb-three-height: 160px;
+  --orb-three-left: 14%;
+  --orb-three-bottom: -30px;
+  --orb-three-radius: 38%;
+  background: var(--app-background);
 }
 
 .theme-midnight.app-shell::before {
   background:
-    linear-gradient(90deg, rgba(157, 143, 255, 0.08), transparent 16%, transparent 84%, rgba(255, 139, 102, 0.08)),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      var(--pattern-ink) 0 2px,
+      transparent 2px 24px,
+      color-mix(in srgb, var(--pattern-highlight) 70%, transparent) 24px 25px,
+      transparent 25px 56px
+    ),
     repeating-linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.02) 0,
-      rgba(255, 255, 255, 0.02) 1px,
+      color-mix(in srgb, var(--pattern-ink) 70%, transparent) 0,
+      color-mix(in srgb, var(--pattern-ink) 70%, transparent) 1px,
       transparent 1px,
-      transparent 80px
+      transparent 96px
     ),
     repeating-linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.02) 0,
-      rgba(255, 255, 255, 0.02) 1px,
+      color-mix(in srgb, var(--pattern-ink) 70%, transparent) 0,
+      color-mix(in srgb, var(--pattern-ink) 70%, transparent) 1px,
       transparent 1px,
-      transparent 80px
-    ),
-    linear-gradient(180deg, transparent 0 68%, rgba(157, 143, 255, 0.06) 68% 69%, transparent 69% 100%),
-    linear-gradient(135deg, transparent 0 38%, rgba(255, 255, 255, 0.025) 38% 38.2%, transparent 38.2% 100%);
+      transparent 96px
+    );
+  background-size: 720px 720px, auto, auto;
+  background-position: 50% 44%, 0 0, 0 0;
   mask-image: linear-gradient(180deg, transparent, black 14%, black 86%, transparent);
-  opacity: 0.9;
+  opacity: 0.82;
 }
 
 .theme-midnight.app-shell::after {
   background:
-    radial-gradient(circle at 20% 18%, rgba(157, 143, 255, 0.24), transparent 18%),
-    radial-gradient(circle at 80% 78%, rgba(255, 139, 102, 0.18), transparent 20%),
-    linear-gradient(90deg, transparent 0 12%, rgba(255, 255, 255, 0.03) 12% 12.2%, transparent 12.2% 100%),
-    linear-gradient(180deg, transparent 0 16%, rgba(255, 255, 255, 0.03) 16% 16.2%, transparent 16.2% 100%),
-    radial-gradient(circle at 52% 52%, rgba(255, 255, 255, 0.02), transparent 34%);
-  opacity: 0.92;
+    radial-gradient(circle at 50% 50%, transparent 0 17%, var(--pattern-ink) 17.4% 17.8%, transparent 18.2% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 28%, var(--pattern-highlight) 28.3% 28.6%, transparent 29% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 40%, color-mix(in srgb, var(--pattern-ink) 82%, transparent) 40.2% 40.5%, transparent 41% 100%),
+    radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--pattern-highlight) 78%, transparent), transparent 0 16%),
+    radial-gradient(circle at 82% 78%, color-mix(in srgb, var(--pattern-ink) 72%, transparent), transparent 0 18%);
+  background-size: 860px 860px, 860px 860px, 860px 860px, auto, auto;
+  background-position: 50% 42%, 50% 42%, 50% 42%, 0 0, 0 0;
+  opacity: 0.84;
 }
 
 .theme-midnight .background-orb {
@@ -138,51 +160,4 @@
   box-shadow:
     0 0 18px color-mix(in srgb, var(--widget-accent) 52%, transparent),
     0 0 0 4px color-mix(in srgb, var(--widget-accent) 14%, transparent);
-}
-
-.theme-midnight.palette-default.app-shell {
-  --bg-start: #efecf7;
-  --bg-end: #d5d0e4;
-  --hero-glow: rgba(255, 255, 255, 0.28);
-  --orb-one: #c4bbff;
-  --orb-two: #ffc0ae;
-}
-
-.theme-midnight.palette-default.app-shell::before {
-  background:
-    linear-gradient(90deg, rgba(88, 74, 168, 0.14), transparent 16%, transparent 84%, rgba(170, 89, 71, 0.14)),
-    repeating-linear-gradient(
-      90deg,
-      rgba(77, 65, 136, 0.12) 0,
-      rgba(77, 65, 136, 0.12) 1px,
-      transparent 1px,
-      transparent 80px
-    ),
-    repeating-linear-gradient(
-      180deg,
-      rgba(77, 65, 136, 0.12) 0,
-      rgba(77, 65, 136, 0.12) 1px,
-      transparent 1px,
-      transparent 80px
-    ),
-    linear-gradient(180deg, transparent 0 68%, rgba(88, 74, 168, 0.12) 68% 69%, transparent 69% 100%),
-    linear-gradient(135deg, transparent 0 38%, rgba(77, 65, 136, 0.1) 38% 38.2%, transparent 38.2% 100%);
-  opacity: 0.98;
-}
-
-.theme-midnight.palette-default.app-shell::after {
-  background:
-    radial-gradient(circle at 20% 18%, rgba(88, 74, 168, 0.18), transparent 18%),
-    radial-gradient(circle at 80% 78%, rgba(170, 89, 71, 0.14), transparent 20%),
-    linear-gradient(90deg, transparent 0 12%, rgba(77, 65, 136, 0.1) 12% 12.2%, transparent 12.2% 100%),
-    linear-gradient(180deg, transparent 0 16%, rgba(77, 65, 136, 0.1) 16% 16.2%, transparent 16.2% 100%),
-    radial-gradient(circle at 52% 52%, rgba(77, 65, 136, 0.06), transparent 34%);
-  opacity: 0.9;
-}
-
-.theme-midnight.palette-default .widget-grid__cell {
-  border-color: rgba(77, 65, 136, 0.18);
-  background:
-    linear-gradient(180deg, rgba(88, 74, 168, 0.05), transparent),
-    rgba(77, 65, 136, 0.035);
 }

@@ -28,3 +28,39 @@
     radial-gradient(circle at bottom left, color-mix(in srgb, var(--widget-accent) 12%, transparent), transparent 28%);
   opacity: 0.7;
 }
+
+.theme-aurora.palette-default.app-shell {
+  --bg-start: #f4f8fb;
+  --bg-end: #e5eef5;
+  --hero-glow: rgba(255, 255, 255, 0.46);
+  --orb-one: #d4fbf0;
+  --orb-two: #ffe1c2;
+}
+
+.theme-aurora.palette-default.app-shell::before {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(61, 148, 141, 0.2), transparent 18%),
+    radial-gradient(circle at 82% 16%, rgba(170, 114, 62, 0.16), transparent 18%),
+    radial-gradient(circle at 74% 82%, rgba(70, 112, 158, 0.16), transparent 22%),
+    linear-gradient(120deg, transparent 0 40%, rgba(61, 148, 141, 0.1) 40% 46%, transparent 46% 100%),
+    linear-gradient(300deg, transparent 0 58%, rgba(61, 148, 141, 0.08) 58% 64%, transparent 64% 100%);
+  opacity: 0.96;
+}
+
+.theme-aurora.palette-default.app-shell::after {
+  background:
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      rgba(71, 111, 145, 0.12) 0,
+      rgba(71, 111, 145, 0.12) 2px,
+      transparent 2px,
+      transparent 80px
+    ),
+    radial-gradient(circle at 50% 0%, rgba(71, 111, 145, 0.12), transparent 20%);
+  opacity: 0.62;
+}
+
+.theme-aurora.palette-default .widget-grid__cell {
+  border-color: rgba(71, 111, 145, 0.18);
+  background: rgba(71, 111, 145, 0.04);
+}

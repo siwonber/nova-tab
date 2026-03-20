@@ -130,3 +130,47 @@
   border-radius: 999px;
   box-shadow: none;
 }
+
+.theme-fjord.palette-default.app-shell {
+  --bg-start: #edf3f4;
+  --bg-end: #dce7ea;
+  --hero-glow: rgba(255, 255, 255, 0.28);
+  --orb-one: #c4f4f7;
+  --orb-two: #c9d0ff;
+}
+
+.theme-fjord.palette-default.app-shell::before {
+  background:
+    linear-gradient(180deg, transparent 0 56%, rgba(70, 128, 145, 0.08) 56% 56.4%, transparent 56.4% 100%),
+    linear-gradient(120deg, transparent 0 24%, rgba(70, 128, 145, 0.12) 24% 28%, transparent 28% 100%),
+    repeating-radial-gradient(
+      circle at 18% 22%,
+      rgba(70, 128, 145, 0.1) 0,
+      rgba(70, 128, 145, 0.1) 2px,
+      transparent 2px,
+      transparent 30px
+    ),
+    repeating-radial-gradient(
+      circle at 76% 72%,
+      rgba(88, 102, 173, 0.08) 0,
+      rgba(88, 102, 173, 0.08) 2px,
+      transparent 2px,
+      transparent 34px
+    ),
+    linear-gradient(135deg, transparent 0 44%, rgba(70, 128, 145, 0.1) 44% 48%, transparent 48% 100%);
+  opacity: 0.74;
+}
+
+.theme-fjord.palette-default.app-shell::after {
+  background:
+    linear-gradient(180deg, rgba(70, 128, 145, 0.06), transparent 18%),
+    radial-gradient(circle at 85% 16%, rgba(70, 128, 145, 0.16), transparent 16%),
+    radial-gradient(circle at 18% 24%, rgba(70, 128, 145, 0.08), transparent 12%),
+    linear-gradient(180deg, rgba(88, 102, 173, 0.08), transparent 26%);
+  opacity: 0.92;
+}
+
+.theme-fjord.palette-default .widget-grid__cell {
+  border-color: rgba(70, 128, 145, 0.18);
+  background: rgba(70, 128, 145, 0.035);
+}

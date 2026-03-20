@@ -110,11 +110,6 @@
   font-size: 0.98rem;
 }
 
-.theme-paper .search-widget__input-row input,
-.theme-paper .search-widget__input-row button {
-  background: var(--search-button-soft-bg);
-}
-
 @media (max-width: 980px) {
   .search-widget__input-row {
     flex-direction: column;

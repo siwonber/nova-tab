@@ -176,7 +176,6 @@ function normalizeDashboardState(savedState?: Partial<DashboardState>): Dashboar
 function normalizeTheme(theme: string | undefined): DashboardState["theme"] {
   switch (theme) {
     case "aurora":
-    case "paper":
     case "midnight":
     case "ember":
     case "fjord":

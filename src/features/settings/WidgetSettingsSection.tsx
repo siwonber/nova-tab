@@ -103,18 +103,29 @@ export function WidgetSettingsSection({
                   </div>
                 </div>
 
-                <div className="widget-color-item__swatches" role="group" aria-label={`${widget.title} colors`}>
+                <div className="widget-color-field">
+                  <div className="widget-choice-summary">
+                    <span id={`${widget.id}-color-label`}>Color</span>
+                    <strong>{widgetToneOptions.find((option) => option.value === widget.tone)?.label ?? "White"}</strong>
+                  </div>
+                  <div className="widget-color-item__swatches" role="radiogroup" aria-labelledby={`${widget.id}-color-label`}>
                   {widgetToneOptions.map((option) => (
                     <button
                       key={option.value}
                       type="button"
                       className={`widget-swatch ${widget.tone === option.value ? "widget-swatch--active" : ""}`}
+                      role="radio"
                       aria-label={`${widget.title} ${option.label}`}
-                      aria-pressed={widget.tone === option.value}
+                      aria-checked={widget.tone === option.value}
                       onClick={() => onWidgetToneChange(widget.id, option.value)}
                       style={{ backgroundColor: option.swatch } as CSSProperties}
-                    />
+                    >
+                      <span className="widget-swatch__check" aria-hidden="true">
+                        {widget.tone === option.value ? "✓" : ""}
+                      </span>
+                    </button>
                   ))}
+                </div>
                 </div>
               </>
             ) : null}

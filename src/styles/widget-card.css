@@ -6,6 +6,7 @@
   --widget-tint: color-mix(in srgb, var(--widget-accent) 16%, transparent);
   --widget-edge: color-mix(in srgb, var(--widget-border-color) 72%, transparent);
   --widget-bloom: color-mix(in srgb, var(--widget-accent) 18%, transparent);
+  --widget-base: color-mix(in srgb, var(--panel) 84%, rgba(255, 255, 255, 0.08));
   border-radius: var(--card-radius);
   min-height: 100%;
   height: 100%;
@@ -15,7 +16,7 @@
     radial-gradient(circle at bottom left, var(--widget-bloom), transparent 42%),
     linear-gradient(180deg, color-mix(in srgb, var(--widget-surface) 94%, var(--widget-accent) 6%), transparent 68%),
     linear-gradient(135deg, var(--widget-tint), transparent 58%),
-    var(--panel);
+    var(--widget-base);
   border: 1px solid var(--widget-edge);
   box-shadow:
     var(--panel-shadow),
@@ -29,6 +30,15 @@
     transform 180ms ease,
     clip-path 180ms ease;
   isolation: isolate;
+}
+
+.widget-card[style*="--widget-accent: #e7e1d6"] {
+  --widget-base: linear-gradient(180deg, rgba(231, 225, 214, 0.72), rgba(209, 199, 186, 0.68));
+  color: #2f271f;
+}
+
+.widget-card[style*="--widget-accent: #e7e1d6"] .widget-card__header {
+  color: rgba(47, 39, 31, 0.6);
 }
 
 .widget-card__header {

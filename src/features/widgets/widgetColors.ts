@@ -13,12 +13,12 @@ export interface WidgetToneOption {
 export const widgetToneOptions: WidgetToneOption[] = [
   {
     value: "default",
-    label: "Default",
-    swatch: "#f4f7fb",
-    surface: "rgba(255, 255, 255, 0.03)",
-    border: "var(--panel-border)",
-    glow: "rgba(255, 255, 255, 0.06)",
-    accent: "#f4f7fb"
+    label: "White",
+    swatch: "#e7e1d6",
+    surface: "rgba(231, 225, 214, 0.14)",
+    border: "rgba(231, 225, 214, 0.48)",
+    glow: "rgba(231, 225, 214, 0.14)",
+    accent: "#e7e1d6"
   },
   {
     value: "mint",

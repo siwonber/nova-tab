@@ -181,7 +181,8 @@
 
 .widget-color-item__meta span,
 .widget-title-field span,
-.widget-size-field span {
+.widget-size-field span,
+.widget-color-field span {
   color: var(--text-muted);
   font-size: 0.84rem;
   letter-spacing: 0.02em;
@@ -203,14 +204,28 @@
 }
 
 .widget-title-field,
-.widget-size-field {
+.widget-size-field,
+.widget-color-field {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+.widget-choice-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.widget-choice-summary strong {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .widget-size-options {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -218,11 +233,27 @@
   min-width: 56px;
   min-height: 44px;
   padding: 10px 14px;
+  font-weight: 700;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.widget-size-option:hover,
+.widget-size-option:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--control-accent) 58%, var(--panel-border));
 }
 
 .widget-size-option--active {
   border-color: var(--control-accent);
-  box-shadow: inset 0 0 0 1px var(--control-accent);
+  background: color-mix(in srgb, var(--control-accent) 18%, var(--control-bg));
+  color: var(--text-main);
+  box-shadow:
+    inset 0 0 0 1px var(--control-accent),
+    0 0 0 3px color-mix(in srgb, var(--control-accent) 20%, transparent);
 }
 
 .widget-color-item__swatches {
@@ -233,18 +264,43 @@
 
 .widget-swatch {
   appearance: none;
-  display: block;
-  flex-shrink: 0;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: var(--chip-radius);
+  flex-shrink: 0;
+  border-radius: 999px;
   border: 2px solid transparent;
   padding: 0;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.24),
+    0 0 0 1px rgba(0, 0, 0, 0.12);
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.widget-swatch:hover,
+.widget-swatch:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--control-accent) 52%, var(--panel-border));
+}
+
+.widget-swatch__check {
+  position: absolute;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
 .widget-swatch--active {
-  border-color: var(--text-main);
+  border-color: var(--control-accent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--control-accent) 20%, transparent);
 }
 
 @media (max-width: 980px) {

@@ -14,13 +14,13 @@ interface BackgroundPaletteOption {
 export const backgroundPaletteOptions: BackgroundPaletteOption[] = [
   {
     value: "default",
-    label: "Default",
-    swatch: "#f4f7fb",
-    bgStart: "#203244",
-    bgEnd: "#0b1620",
-    heroGlow: "rgba(244, 247, 251, 0.22)",
-    orbOne: "#f4f7fb",
-    orbTwo: "#c8d8e8"
+    label: "White",
+    swatch: "#e7e1d6",
+    bgStart: "#f5f1ea",
+    bgEnd: "#ebe5dc",
+    heroGlow: "rgba(255, 255, 255, 0.44)",
+    orbOne: "#ffffff",
+    orbTwo: "#f2ece4"
   },
   {
     value: "mint",

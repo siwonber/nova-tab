@@ -188,15 +188,19 @@ function App() {
   const boardStyle = {
     "--dashboard-columns": DASHBOARD_COLUMNS,
     "--dashboard-rows": DASHBOARD_ROWS,
-    "--bg-start": backgroundPalette.bgStart,
-    "--bg-end": backgroundPalette.bgEnd,
-    "--hero-glow": backgroundPalette.heroGlow,
-    "--orb-one": backgroundPalette.orbOne,
-    "--orb-two": backgroundPalette.orbTwo
+    ...(state.backgroundPalette === "default"
+      ? {}
+      : {
+          "--bg-start": backgroundPalette.bgStart,
+          "--bg-end": backgroundPalette.bgEnd,
+          "--hero-glow": backgroundPalette.heroGlow,
+          "--orb-one": backgroundPalette.orbOne,
+          "--orb-two": backgroundPalette.orbTwo
+        })
   } as CSSProperties;
 
   return (
-    <main className={`app-shell theme-${state.theme}`} style={boardStyle}>
+    <main className={`app-shell theme-${state.theme} palette-${state.backgroundPalette}`} style={boardStyle}>
       <div className="background-orb background-orb--one" />
       <div className="background-orb background-orb--two" />
 
